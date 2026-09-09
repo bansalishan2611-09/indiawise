@@ -30,10 +30,10 @@ export default function FounderPage() {
           <div className="shrink-0 relative w-[150px] h-[150px] sm:w-[180px] sm:h-[180px] md:w-[220px] md:h-[220px] rounded-full p-2 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100">
             <div className="relative w-full h-full rounded-full overflow-hidden">
               <Image 
-                src="/images/founder.jpg" 
+                src="/images/founder.png" 
                 alt="Ishan Bansal - Founder of IndiaWise" 
                 fill
-                className="object-cover scale-[1.15]"
+                className="object-cover scale-[1.35] origin-[55%_45%]"
                 sizes="(max-width: 640px) 150px, (max-width: 768px) 180px, 220px"
                 priority
               />

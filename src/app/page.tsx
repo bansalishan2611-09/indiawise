@@ -222,10 +222,10 @@ export default function Home() {
             <div className="shrink-0 relative w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-full p-2 bg-white shadow-xl shadow-navy/5 border border-gray-100 z-10">
               <div className="relative w-full h-full rounded-full overflow-hidden">
                 <Image 
-                  src="/images/founder.jpg" 
+                  src="/images/founder.png" 
                   alt="Ishan Bansal - Founder of IndiaWise" 
                   fill
-                  className="object-cover scale-[1.15]"
+                  className="object-cover scale-[1.35] origin-[55%_45%]"
                   sizes="(max-width: 640px) 144px, (max-width: 768px) 176px, 208px"
                 />
               </div>
