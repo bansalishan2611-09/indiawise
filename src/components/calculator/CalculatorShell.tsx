@@ -176,23 +176,6 @@ export default function CalculatorShell({ definition, slug }: Props) {
         </div>
       )}
 
-      {/* Related Calculators */}
-      {definition.relatedCalculators && definition.relatedCalculators.length > 0 && (
-        <div className="mt-12 print:hidden">
-          <h2 className="text-2xl font-bold text-navy mb-6">Related Calculators</h2>
-          <div className="flex flex-wrap gap-3">
-            {definition.relatedCalculators.map(slug => (
-              <Link
-                key={slug}
-                href={getCategoryHref(slug)}
-                className="px-5 py-2.5 bg-white border border-border rounded-xl font-medium text-navy hover:border-brand hover:text-brand transition-colors capitalize"
-              >
-                {slug.replace(/-/g, ' ')}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

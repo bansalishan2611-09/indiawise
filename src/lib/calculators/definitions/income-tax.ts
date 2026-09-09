@@ -6,7 +6,14 @@ export const incomeTaxDefinition: CalculatorDefinition = {
   category: 'Tax',
   categorySlug: 'tax',
   shortDescription: 'Compare Old vs New Tax Regime and find out your exact tax liability for FY 2024-25.',
-  longDescription: 'Use our Income Tax Calculator to compare the Old and New tax regimes for FY 2024-25 (AY 2025-26). Factor in standard deductions, 80C exemptions, and see which regime saves you more money.',
+  longDescription: `The Income Tax Calculator helps Indian taxpayers estimate their tax liability for the financial year. With the introduction of the revised tax slabs, deciding between the Old and New Tax Regimes has become a critical step for salaried individuals and professionals.
+
+Old vs New Tax Regime (FY 2024-25 / AY 2025-26):
+• The New Tax Regime is the default option and offers lower tax rates. It includes a Standard Deduction of ₹75,000 for salaried employees but removes most other exemptions (like HRA, 80C, 80D). Under this regime, income up to ₹7,00,000 is entirely tax-free due to the Section 87A rebate.
+• The Old Tax Regime has higher slab rates but allows you to claim over 70 deductions and exemptions. If you have significant investments in PPF, ELSS, life insurance (80C), pay health insurance premiums (80D), or pay home loan interest (Section 24b), the Old Regime might still result in lower overall tax.
+
+How to use this tool:
+Simply input your Gross Annual Income. If you have active investments or claim HRA, open the "Advanced Settings" to enter your deductions. The calculator will automatically apply the respective rules for both regimes, factor in the 4% Health and Education Cess, and provide a clear side-by-side comparison to help you choose the best tax-saving strategy.`,
   keywords: ['income tax calculator', 'old vs new regime', 'tax calculator india', 'fy 24-25 tax calculator', 'income tax india'],
   relatedCalculators: ['in-hand-salary-calculator', 'gst-calculator'],
   faqs: [

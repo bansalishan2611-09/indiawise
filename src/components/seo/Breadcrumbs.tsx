@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export interface BreadcrumbItem {
   label: string;
@@ -11,8 +12,33 @@ interface BreadcrumbsProps {
 }
 
 export default function Breadcrumbs({ items }: BreadcrumbsProps) {
+  const siteUrl = siteConfig.url;
+  
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${siteUrl}/`
+      },
+      ...items.map((item, index) => ({
+        "@type": "ListItem",
+        "position": index + 2,
+        "name": item.label,
+        "item": `${siteUrl}${item.href}`
+      }))
+    ]
+  };
+
   return (
     <nav aria-label="Breadcrumb" className="py-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <ol className="flex flex-wrap items-center space-x-2 text-sm text-muted">
         <li>
           <Link href="/" className="hover:text-brand transition-colors">

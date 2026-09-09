@@ -39,11 +39,11 @@ export default async function CalculatorPage({ params }: { params: { category: s
   
   const appSchema = {
     '@context': 'https://schema.org',
-    '@type': definition.schemaType || 'WebApplication',
+    '@type': definition.schemaType || 'SoftwareApplication',
     name: definition.name,
     description: definition.shortDescription,
-    applicationCategory: 'CalculatorApplication',
-    operatingSystem: 'Any',
+    applicationCategory: definition.category === 'Health' ? 'HealthApplication' : 'FinanceApplication',
+    operatingSystem: 'All',
     url: `${siteUrl}/calculators/${category}/${slug}`,
   };
 
@@ -63,6 +63,15 @@ export default async function CalculatorPage({ params }: { params: { category: s
     };
   }
 
+  const relatedLinks = (definition.relatedCalculators || []).map(relatedSlug => {
+    const relDef = getCalculator(relatedSlug)?.definition;
+    return {
+      slug: relatedSlug,
+      name: relDef?.name || relatedSlug.replace(/-/g, ' '),
+      href: relDef ? `/calculators/${relDef.categorySlug}/${relatedSlug}` : `/calculators/${category}/${relatedSlug}`
+    };
+  });
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <script
@@ -76,11 +85,41 @@ export default async function CalculatorPage({ params }: { params: { category: s
         />
       )}
       <Breadcrumbs items={breadcrumbs} />
+      
+      {/* Page Header */}
       <div className="mt-6 mb-10">
         <h1 className="text-4xl font-extrabold text-navy tracking-tight mb-3">{definition.name}</h1>
         <p className="text-lg text-muted max-w-2xl">{definition.shortDescription}</p>
       </div>
+
+      {/* Main Interactive Shell */}
       <CalculatorShell definition={definition} slug={slug} />
+
+      {/* SEO Content Section */}
+      <div className="mt-16 prose prose-lg prose-navy max-w-none print:hidden">
+        <h2 className="text-2xl font-bold text-navy mb-4">About the {definition.name}</h2>
+        <p className="text-muted leading-relaxed whitespace-pre-line">
+          {definition.longDescription}
+        </p>
+      </div>
+
+      {/* Server-Rendered Internal Links */}
+      {relatedLinks.length > 0 && (
+        <div className="mt-12 print:hidden">
+          <h2 className="text-2xl font-bold text-navy mb-6">Related Calculators</h2>
+          <div className="flex flex-wrap gap-3">
+            {relatedLinks.map(link => (
+              <a
+                key={link.slug}
+                href={link.href}
+                className="px-5 py-2.5 bg-white border border-border rounded-xl font-medium text-navy hover:border-brand hover:text-brand transition-colors"
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
