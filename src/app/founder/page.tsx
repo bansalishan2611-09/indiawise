@@ -1,5 +1,6 @@
 import { generatePageMetadata } from "@/lib/seo/metadata";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export const metadata = generatePageMetadata({
@@ -24,14 +25,30 @@ export default function FounderPage() {
         </div>
 
         {/* Header / Identity */}
-        <div className="mb-16">
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-border text-xs font-bold tracking-widest uppercase text-muted mb-8">
-            The Founder
+        <div className="mb-16 flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 text-center md:text-left">
+          {/* Profile Image Container */}
+          <div className="shrink-0 relative w-[150px] h-[150px] sm:w-[180px] sm:h-[180px] md:w-[220px] md:h-[220px] rounded-full p-2 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100">
+            <div className="relative w-full h-full rounded-full overflow-hidden">
+              <Image 
+                src="/images/founder.jpg" 
+                alt="Ishan Bansal - Founder of IndiaWise" 
+                fill
+                className="object-cover scale-[1.15]"
+                sizes="(max-width: 640px) 150px, (max-width: 768px) 180px, 220px"
+                priority
+              />
+            </div>
           </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-navy tracking-tight mb-8">
-            Ishan Bansal
-          </h1>
-          <div className="w-16 h-1 bg-brand rounded-full"></div>
+
+          <div className="flex flex-col items-center md:items-start pt-2">
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-border text-xs font-bold tracking-widest uppercase text-muted mb-6">
+              The Founder
+            </div>
+            <h1 className="text-5xl md:text-7xl font-extrabold text-navy tracking-tight mb-8">
+              Ishan Bansal
+            </h1>
+            <div className="w-16 h-1 bg-brand rounded-full"></div>
+          </div>
         </div>
 
         {/* Massive Statement Quote matching Kaventra hero quote format */}

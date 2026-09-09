@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Calculator, Percent, FileText, Briefcase, Calendar, Receipt, TrendingUp, ShieldCheck, Zap, LineChart, Target, Coins, ArrowRight } from "lucide-react";
 import HeroSearch from "@/components/search/HeroSearch";
 import { siteConfig } from "@/config/site";
@@ -209,20 +210,42 @@ export default function Home() {
         </section>
 
         {/* Founder Statement CTA */}
-        <section className="py-24 md:py-32 border-t border-border mt-16 flex flex-col items-center text-center">
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-border text-xs font-bold tracking-widest uppercase text-muted mb-10">
-            From the Founder
+        <section className="relative py-24 md:py-32 mt-16 rounded-3xl overflow-hidden shadow-2xl shadow-navy/10 mb-16 mx-4 sm:mx-6 lg:mx-8 bg-navy text-white">
+          {/* Premium Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-navy via-[#162340] to-[#1e3a8a]/60"></div>
+          <div className="absolute inset-0 bg-grid-pattern-light opacity-10"></div>
+          
+          <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6">
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-white/20 bg-white/5 text-xs font-bold tracking-widest uppercase text-white/80 mb-10 backdrop-blur-sm">
+              From the Founder
+            </div>
+            
+            <h2 className="text-3xl md:text-[2.5rem] font-medium text-white leading-[1.3] tracking-tight max-w-4xl mx-auto mb-12">
+              &quot;IndiaWise is being built as a long-term vision — not just as a single product, but as a complete ecosystem of practical utilities, technology, and people.&quot;
+            </h2>
+            
+            {/* Circular Founder Image */}
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-white/10 backdrop-blur-md shadow-2xl border border-white/20 mb-6">
+              <div className="relative w-full h-full rounded-full overflow-hidden">
+                <Image 
+                  src="/images/founder.jpg" 
+                  alt="Ishan Bansal - Founder of IndiaWise" 
+                  fill
+                  className="object-cover scale-[1.15]"
+                  sizes="(max-width: 640px) 96px, 112px"
+                />
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <div className="text-white font-bold text-lg">Ishan Bansal</div>
+              <div className="text-white/60 text-xs font-bold tracking-widest uppercase mt-1">Founder & Creator</div>
+            </div>
+            
+            <Link href="/founder" className="text-navy font-bold hover:bg-gray-100 transition-colors flex items-center gap-2 mt-4 group text-sm uppercase tracking-wider bg-white px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl">
+              Read full statement <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
-          <h2 className="text-3xl md:text-[2.5rem] font-medium text-navy leading-[1.3] tracking-tight max-w-4xl mx-auto mb-12">
-            &quot;IndiaWise is being built as a long-term vision — not just as a single product, but as a complete ecosystem of practical utilities, technology, and people.&quot;
-          </h2>
-          <div className="mb-6">
-            <div className="text-navy font-bold text-lg">Ishan Bansal</div>
-            <div className="text-muted text-xs font-bold tracking-widest uppercase mt-1">Founder & Creator</div>
-          </div>
-          <Link href="/founder" className="text-brand font-semibold hover:text-navy transition-colors flex items-center gap-2 mt-4 group text-sm uppercase tracking-wider">
-            Read full statement <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
         </section>
 
       </main>
