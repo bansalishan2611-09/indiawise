@@ -13,6 +13,7 @@ const navLinks = [
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
   // Close menu on route change
@@ -30,8 +31,26 @@ export default function Header() {
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
+  // Detect scroll state for premium translucent header
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 12);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial scroll position
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-white print:hidden">
+    <header 
+      className={`sticky top-0 z-50 w-full print:hidden transition-all duration-200 ease-in-out motion-reduce:transition-none ${
+        isScrolled 
+          ? 'bg-white/80 backdrop-blur-[16px] border-b border-border shadow-[0_4px_20px_rgb(0,0,0,0.03)]' 
+          : 'bg-white border-b border-border'
+      }`}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-2">
