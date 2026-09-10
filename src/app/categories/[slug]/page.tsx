@@ -8,10 +8,11 @@ import Link from "next/link";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const slug = (await params).slug;
+  const formattedSlug = slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   
   return generatePageMetadata({
-    title: `${slug} Calculators`,
-    description: `Browse all our free, accurate ${slug} calculators designed for India.`,
+    title: `${formattedSlug} Calculators`,
+    description: `Browse all our free, accurate ${formattedSlug} calculators designed for India.`,
     path: `/categories/${slug}`,
   });
 }

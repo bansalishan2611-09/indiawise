@@ -40,8 +40,8 @@ export default function GrowthChart({ data }: { data: GrowthRow[] }) {
         cursor={{ fill: '#F3F4F6' }}
       />
       <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
-      <Bar dataKey="invested" name="Invested Amount" stackId="a" fill="#2563EB" radius={[0, 0, 4, 4]} />
-      <Bar dataKey="returns" name="Wealth Gained" stackId="a" fill="#60A5FA" radius={[4, 4, 0, 0]} />
+      <Bar isAnimationActive={false} dataKey="invested" name="Invested Amount" stackId="a" fill="#2563EB" radius={[0, 0, 4, 4]} />
+      <Bar isAnimationActive={false} dataKey="returns" name="Wealth Gained" stackId="a" fill="#60A5FA" radius={[4, 4, 0, 0]} />
     </BarChart>
   );
 

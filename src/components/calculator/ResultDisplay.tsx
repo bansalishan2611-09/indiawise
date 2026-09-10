@@ -100,6 +100,7 @@ export default function ResultDisplay({ results, isLoading }: ResultDisplayProps
                   paddingAngle={5}
                   dataKey="value"
                   stroke="none"
+                  isAnimationActive={false}
                 >
                   {chartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
