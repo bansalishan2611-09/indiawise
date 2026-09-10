@@ -40,17 +40,34 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
-        {/* Explicitly tell Google our Site Name to fix "Vercel" caching */}
+        {/* Explicitly tell Google our Site Name and Founder to fix AI Overview confusion */}
         <Script
-          id="schema-website"
+          id="schema-organization"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "IndiaWise",
-              "alternateName": "IndiaWise Calculators",
-              "url": siteConfig.url,
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": `${siteConfig.url}/#website`,
+                  "url": siteConfig.url,
+                  "name": "IndiaWise",
+                  "alternateName": "IndiaWise Calculators"
+                },
+                {
+                  "@type": "Organization",
+                  "@id": `${siteConfig.url}/#organization`,
+                  "name": "IndiaWise",
+                  "url": siteConfig.url,
+                  "logo": `${siteConfig.url}/images/favicon.png`,
+                  "founder": {
+                    "@type": "Person",
+                    "name": "Ishan Bansal",
+                    "url": `${siteConfig.url}/founder`
+                  }
+                }
+              ]
             })
           }}
         />

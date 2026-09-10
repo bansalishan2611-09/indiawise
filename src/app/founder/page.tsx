@@ -2,6 +2,8 @@ import { generatePageMetadata } from "@/lib/seo/metadata";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Script from "next/script";
+import { siteConfig } from "@/config/site";
 
 export const metadata = generatePageMetadata({
   title: "Founder of IndiaWise | Ishan Bansal",
@@ -11,18 +13,35 @@ export const metadata = generatePageMetadata({
 
 export default function FounderPage() {
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-white">
-      {/* Very subtle grid background to keep IndiaWise theme */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none"></div>
-      
-      <main className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-32">
+    <>
+      <Script
+        id="schema-person"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Ishan Bansal",
+            "jobTitle": "Founder & Creator",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "IndiaWise"
+            },
+            "url": `${siteConfig.url}/founder`,
+            "description": "Founder and creator of IndiaWise, an India-focused platform for smart calculators and everyday utilities."
+          })
+        }}
+      />
+      <div className="flex flex-col items-center w-full min-h-screen bg-white">
+        {/* Very subtle grid background to keep IndiaWise theme */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none"></div>
         
-        {/* Back Navigation matching Kaventra "Return to Architecture" style */}
-        <div className="mb-20">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-navy transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Return to Home
-          </Link>
-        </div>
+        <main className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-32">
+          <div className="mb-20">
+            <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-navy transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Return to Home
+            </Link>
+          </div>
 
         {/* Header / Identity */}
         <div className="mb-16 flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 text-center md:text-left">
@@ -101,5 +120,6 @@ export default function FounderPage() {
 
       </main>
     </div>
+    </>
   );
 }
