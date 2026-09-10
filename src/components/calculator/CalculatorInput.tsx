@@ -83,6 +83,7 @@ export default function CalculatorInput({ input, value, unitValue, onChange, err
                 <select
                   value={unitValue}
                   onChange={(e) => onChange(`${input.id}_unit`, e.target.value)}
+                  suppressHydrationWarning
                   className="h-full w-full bg-transparent appearance-none pl-3 pr-8 text-sm font-semibold text-navy focus:outline-none focus:ring-2 focus:ring-brand/50 rounded-r-xl cursor-pointer"
                 >
                   {input.unitOptions.map(u => (
@@ -123,6 +124,7 @@ export default function CalculatorInput({ input, value, unitValue, onChange, err
           id={input.id}
           value={value}
           onChange={e => onChange(input.id, e.target.value)}
+          suppressHydrationWarning
           className={cn(baseInput, errorClass, 'cursor-pointer')}
         >
           {input.options?.map(opt => (

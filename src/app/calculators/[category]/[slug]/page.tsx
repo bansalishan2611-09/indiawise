@@ -4,6 +4,7 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import CalculatorShell from '@/components/calculator/CalculatorShell';
 import { notFound } from 'next/navigation';
 import { siteConfig } from '@/config/site';
+import { Suspense } from 'react';
 
 export async function generateStaticParams() {
   return getAllCalculators().map(def => ({
@@ -93,7 +94,9 @@ export default async function CalculatorPage({ params }: { params: { category: s
       </div>
 
       {/* Main Interactive Shell */}
-      <CalculatorShell definition={definition} slug={slug} />
+      <Suspense fallback={<div className="h-96 flex items-center justify-center animate-pulse bg-alt rounded-3xl border border-border">Loading calculator...</div>}>
+        <CalculatorShell definition={definition} slug={slug} />
+      </Suspense>
 
       {/* SEO Content Section */}
       <div className="mt-16 prose prose-lg prose-navy max-w-none print:hidden">
