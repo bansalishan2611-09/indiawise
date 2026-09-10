@@ -2,19 +2,18 @@ import { generatePageMetadata } from "@/lib/seo/metadata";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Script from "next/script";
 import { siteConfig } from "@/config/site";
 
 export const metadata = generatePageMetadata({
   title: "Founder of IndiaWise | Ishan Bansal",
-  description: "Meet Ishan Bansal, the founder and creator of IndiaWise  an India-focused platform for smart calculators and everyday utilities.",
+  description: "Meet Ishan Bansal, the founder and creator of IndiaWise — an India-focused platform for smart calculators and everyday utilities.",
   path: "/founder",
 });
 
 export default function FounderPage() {
   return (
     <>
-      <Script
+      <script
         id="schema-person"
         type="application/ld+json"
         dangerouslySetInnerHTML={{

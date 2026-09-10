@@ -41,7 +41,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
         {/* Explicitly tell Google our Site Name and Founder to fix AI Overview confusion */}
-        <Script
+        <script
           id="schema-organization"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
