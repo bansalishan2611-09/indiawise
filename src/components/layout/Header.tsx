@@ -74,7 +74,13 @@ export default function Header() {
         
         {/* CTA and Mobile Menu */}
         <div className="flex items-center gap-4">
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
+            <Link 
+              href="/founder" 
+              className="px-5 py-2.5 bg-white border border-gray-200 text-navy rounded-xl text-sm font-semibold hover:border-gray-300 hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2"
+            >
+              The Founder
+            </Link>
             <Link 
               href="/contact" 
               className="px-5 py-2.5 bg-brand text-white rounded-xl text-sm font-semibold hover:bg-brand-hover transition-colors shadow-sm"
@@ -122,7 +128,13 @@ export default function Header() {
                 );
               })}
               
-              <div className="pt-4 border-t border-border mt-4">
+              <div className="pt-4 border-t border-border mt-4 flex flex-col gap-3">
+                <Link
+                  href="/founder"
+                  className="flex items-center justify-center w-full py-3 bg-white border border-gray-200 text-navy rounded-xl text-base font-semibold hover:bg-gray-50 transition-all shadow-sm"
+                >
+                  The Founder
+                </Link>
                 <Link
                   href="/contact"
                   className="flex items-center justify-center w-full py-3 rounded-xl text-base font-semibold text-white bg-brand hover:bg-brand-hover transition-colors shadow-sm"
