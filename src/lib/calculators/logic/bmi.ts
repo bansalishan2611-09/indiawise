@@ -39,10 +39,44 @@ export function calculateBMI(inputs: Record<string, number | string>): Calculato
   const healthyMin = Math.round(18.5 * heightM * heightM * 10) / 10;
   const healthyMax = Math.round(24.9 * heightM * heightM * 10) / 10;
 
-  return { results: [
+  const results: CalculatorResult[] = [
     { id: 'bmi', label: 'Your BMI', value: roundedBmi, isHighlighted: true, description: category },
     { id: 'category', label: 'Category', value: category, description: 'WHO BMI Classification' },
     { id: 'healthy_min', label: 'Healthy Weight (Min)', value: `${healthyMin} kg`, description: 'BMI 18.5' },
     { id: 'healthy_max', label: 'Healthy Weight (Max)', value: `${healthyMax} kg`, description: 'BMI 24.9' },
-  ] };
+  ];
+
+  const extraWeight = parseInputValue(inputs.extraWeight || 0);
+  let revisedResults: CalculatorResult[] = [];
+  
+  if (extraWeight !== 0 && weightKg > 0 && heightM > 0) {
+    const newWeightKg = weightKg + extraWeight;
+    const newBmi = newWeightKg / (heightM * heightM);
+    const roundedNewBmi = Math.round(newBmi * 10) / 10;
+    
+    let newCategory: string;
+    if (newBmi < 18.5) {
+      newCategory = 'Underweight';
+    } else if (newBmi < 25) {
+      newCategory = 'Normal weight';
+    } else if (newBmi < 30) {
+      newCategory = 'Overweight';
+    } else {
+      newCategory = 'Obese';
+    }
+    
+    const bmiDiff = roundedNewBmi - roundedBmi;
+    
+    revisedResults = [
+      { id: 'new_weight', label: 'New Target Weight', value: `${Math.round(newWeightKg * 10) / 10} kg` },
+      { id: 'new_bmi_val', label: 'New BMI', value: roundedNewBmi, isHighlighted: true, description: newCategory },
+      { id: 'new_category', label: 'New Category', value: newCategory },
+      { id: 'bmi_diff', label: 'BMI Change', value: bmiDiff > 0 ? `+${Math.round(bmiDiff*10)/10}` : Math.round(bmiDiff*10)/10 }
+    ];
+  }
+
+  return { 
+    results,
+    whatIfResults: revisedResults.length > 0 ? revisedResults : undefined
+  };
 }

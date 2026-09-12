@@ -9,6 +9,15 @@ export const rdDefinition: CalculatorDefinition = {
   longDescription: 'Use our RD Calculator to estimate the maturity value of your Recurring Deposit based on monthly deposit amount, interest rate, and tenure.',
   keywords: ['rd calculator', 'recurring deposit calculator', 'rd returns', 'india rd calculator', 'rd maturity value'],
   relatedCalculators: ['fd-calculator', 'sip-calculator'],
+  whatIf: {
+    id: 'extraInvestment',
+    label: 'Increase Monthly RD',
+    min: 0,
+    max: 25000,
+    step: 500,
+    defaultValue: 0,
+    unit: '₹'
+  },
   faqs: [
     {
       question: 'What is a Recurring Deposit (RD)?',

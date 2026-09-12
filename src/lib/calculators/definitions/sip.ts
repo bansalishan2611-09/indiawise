@@ -19,6 +19,15 @@ Why start a SIP?
 SIPs bring financial discipline and allow you to benefit from "Rupee Cost Averaging". When the markets are down, your fixed instalment buys more mutual fund units; when markets are up, it buys fewer. Over a long tenure (10+ years), this significantly reduces market volatility risks and harnesses the power of compounding.`,
   keywords: ['sip calculator', 'mutual fund sip', 'systematic investment plan', 'sip returns india'],
   relatedCalculators: ['home-loan-emi', 'gst-calculator'],
+  whatIf: {
+    id: 'extraInvestment',
+    label: 'Increase Monthly SIP',
+    min: 0,
+    max: 50000,
+    step: 500,
+    defaultValue: 0,
+    unit: '₹'
+  },
   faqs: [
     { question: 'What is SIP?', answer: 'SIP (Systematic Investment Plan) is a method of investing a fixed amount in mutual funds at regular intervals, typically monthly.' },
     { question: 'What return to expect from SIP?', answer: 'Equity mutual funds in India have historically delivered 12–15% annual returns over the long term.' },

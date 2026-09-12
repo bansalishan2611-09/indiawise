@@ -9,6 +9,15 @@ export const studentLoanDefinition: CalculatorDefinition = {
   longDescription: 'Plan your higher education funding with our Student Loan Calculator. Estimate your monthly repayments and total interest based on your loan amount, interest rate, and tenure.',
   keywords: ['student loan calculator', 'education loan emi', 'education loan calculator india'],
   relatedCalculators: ['personal-loan-emi-calculator'],
+  whatIf: {
+    id: 'extraPayment',
+    label: 'Pay Extra Every Month',
+    min: 0,
+    max: 25000,
+    step: 500,
+    defaultValue: 0,
+    unit: '₹'
+  },
   faqs: [
     {
       question: 'When does education loan repayment start?',

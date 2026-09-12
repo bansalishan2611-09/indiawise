@@ -9,6 +9,15 @@ export const gstDefinition: CalculatorDefinition = {
   longDescription: 'Our GST Calculator helps businesses and individuals quickly calculate Goods and Services Tax for any amount. Supports both exclusive and inclusive calculations with CGST/SGST breakdowns.',
   keywords: ['gst calculator', 'gst calculation india', 'goods services tax', 'cgst sgst calculator'],
   relatedCalculators: ['home-loan-emi', 'sip-calculator'],
+  whatIf: {
+    id: 'extraAmount',
+    label: 'Change Amount by',
+    min: -5000,
+    max: 5000,
+    step: 100,
+    defaultValue: 0,
+    unit: '₹'
+  },
   faqs: [
     { question: 'What is GST?', answer: 'GST (Goods and Services Tax) is a comprehensive indirect tax levied on supply of goods and services in India.' },
     { question: 'What are GST slabs in India?', answer: 'GST has four main slabs: 5%, 12%, 18%, and 28%. Basic necessities are at 0%.' },

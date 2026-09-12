@@ -9,6 +9,15 @@ export const salaryDefinition: CalculatorDefinition = {
   longDescription: 'Use our In-Hand Salary Calculator to find out your monthly take-home salary from your CTC. Factors in EPF, Gratuity, and New Regime Income Tax automatically.',
   keywords: ['in hand salary calculator', 'ctc calculator', 'take home pay calculator', 'india salary calculator', 'ctc to in hand'],
   relatedCalculators: ['income-tax-calculator'],
+  whatIf: {
+    id: 'hikePercentage',
+    label: 'What if I get a hike of?',
+    min: 0,
+    max: 100,
+    step: 1,
+    defaultValue: 0,
+    unit: '%'
+  },
   faqs: [
     {
       question: 'Why is my in-hand salary lower than my CTC / 12?',

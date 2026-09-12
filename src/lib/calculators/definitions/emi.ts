@@ -20,6 +20,15 @@ Knowing your exact monthly commitment allows you to plan your household budget e
 Note: While this calculator gives highly accurate estimates, your final bank EMI may vary slightly depending on processing fees, GST, and specific bank compounding rules.`,
   keywords: ['home loan emi', 'emi calculator', 'loan calculator', 'housing loan', 'mortgage calculator india'],
   relatedCalculators: ['sip-calculator', 'gst-calculator'],
+  whatIf: {
+    id: 'extraPayment',
+    label: 'Pay Extra Every Month',
+    min: 0,
+    max: 50000,
+    step: 500,
+    defaultValue: 0,
+    unit: '₹'
+  },
   faqs: [
     { question: 'What is EMI?', answer: 'EMI (Equated Monthly Instalment) is a fixed monthly payment made by a borrower to a lender. It includes both the principal and interest components.' },
     { question: 'How is EMI calculated?', answer: 'EMI = P × r × (1+r)^n / ((1+r)^n - 1), where P is principal, r is monthly rate, and n is number of months.' },

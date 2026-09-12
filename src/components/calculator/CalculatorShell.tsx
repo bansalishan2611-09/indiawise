@@ -7,6 +7,8 @@ import CalculatorInputComponent from './CalculatorInput';
 import ResultDisplay from './ResultDisplay';
 import AmortizationSchedule from './AmortizationSchedule';
 import GrowthChart from './GrowthChart';
+import WhatIfPanel from './WhatIfPanel';
+import { FDComparePanel } from './FDComparePanel';
 import Link from 'next/link';
 import { ChevronDown, Download } from 'lucide-react';
 import { formatIndianCurrency, formatIndianNumber } from '@/lib/calculators/formatters';
@@ -24,6 +26,9 @@ function buildDefaults(definition: CalculatorDefinition): Record<string, string 
       defaults[`${i.id}_unit`] = i.unitOptions[0];
     }
   });
+  if (definition.whatIf) {
+    defaults[definition.whatIf.id] = definition.whatIf.defaultValue;
+  }
   return defaults;
 }
 
@@ -44,6 +49,23 @@ export default function CalculatorShell({ definition, slug }: Props) {
           defaults[`${i.id}_unit`] = unit;
         }
       });
+      if (definition.whatIf) {
+        const whatIfVal = searchParams.get(definition.whatIf.id);
+        if (whatIfVal !== null) {
+          const num = parseFloat(whatIfVal);
+          if (!isNaN(num)) defaults[definition.whatIf.id] = num;
+        }
+        
+        if (definition.whatIf.type === 'fd-compare') {
+          ['compareAmount', 'compareRate', 'compareTenure'].forEach(id => {
+            const val = searchParams.get(id);
+            if (val !== null) {
+              const num = parseFloat(val);
+              if (!isNaN(num)) defaults[id] = num;
+            }
+          });
+        }
+      }
     }
     return defaults;
   });
@@ -61,6 +83,7 @@ export default function CalculatorShell({ definition, slug }: Props) {
   const calculateFn = getCalculateFn(slug);
 
   let results: CalculatorResult[] = [];
+  let whatIfResults: CalculatorResult[] | undefined = undefined;
   let amortization: any = undefined;
   let growthData: any = undefined;
 
@@ -68,6 +91,7 @@ export default function CalculatorShell({ definition, slug }: Props) {
     try {
       const payload = calculateFn(values);
       results = payload.results || [];
+      whatIfResults = payload.whatIfResults;
       amortization = payload.amortization;
       growthData = payload.growthData;
     } catch {
@@ -137,7 +161,7 @@ export default function CalculatorShell({ definition, slug }: Props) {
 
         {/* Print-only Inputs Summary */}
         <div className="hidden print:block mb-8 bg-gray-50 p-6 rounded-2xl border border-gray-200">
-          <h2 className="text-sm uppercase tracking-widest font-bold text-gray-400 mb-6 pb-2 border-b border-gray-200">Inputs Summary</h2>
+          <h2 className="text-sm uppercase tracking-widest font-bold text-gray-400 mb-6 pb-2 border-b border-gray-200">Original Inputs</h2>
           <div className="grid grid-cols-3 gap-y-6 gap-x-8">
             {definition.inputs.map(input => {
               const val = values[input.id];
@@ -191,6 +215,17 @@ export default function CalculatorShell({ definition, slug }: Props) {
                       if (unit) params.set(`${i.id}_unit`, unit.toString());
                     });
                     
+                    if (definition.whatIf && values[definition.whatIf.id]) {
+                      params.set(definition.whatIf.id, values[definition.whatIf.id].toString());
+                      if (definition.whatIf.type === 'fd-compare') {
+                        ['compareAmount', 'compareRate', 'compareTenure'].forEach(id => {
+                          if (values[id] !== undefined && values[id] !== '') {
+                            params.set(id, values[id].toString());
+                          }
+                        });
+                      }
+                    }
+                    
                     const shareUrl = `${baseUrl}${cleanPath}?${params.toString()}`;
                     
                     // Build message lines
@@ -214,7 +249,7 @@ export default function CalculatorShell({ definition, slug }: Props) {
                     });
                     
                     lines.push('');
-                    lines.push(`*Results:*`);
+                    lines.push(`*Original Calculation:*`);
                     results.forEach(res => {
                       let resVal = res.value;
                       if (typeof res.value === 'number') {
@@ -224,6 +259,34 @@ export default function CalculatorShell({ definition, slug }: Props) {
                       }
                       lines.push(`• *${res.label}:* ${resVal}`);
                     });
+
+                    if (definition.whatIf && values[definition.whatIf.id] && whatIfResults && whatIfResults.length > 0) {
+                      lines.push('');
+                      lines.push(`*What-If Scenario:*`);
+                      const wi = definition.whatIf;
+                      
+                      if (wi.type === 'fd-compare') {
+                        if (values['compareAmount']) lines.push(`• *Compare Amount:* ₹${formatIndianNumber(Number(values['compareAmount']))}`);
+                        if (values['compareRate']) lines.push(`• *Compare Rate:* ${values['compareRate']}%`);
+                        if (values['compareTenure']) lines.push(`• *Compare Tenure:* ${values['compareTenure']} Years`);
+                      } else {
+                        const val = values[wi.id];
+                        const formattedVal = formatIndianNumber(typeof val === 'string' ? parseFloat(val) : val as number);
+                        lines.push(`• *${wi.label}:* ${(wi.unit === '₹' || wi.unit === 'Rs.') ? '₹' : ''}${formattedVal}`);
+                      }
+                      
+                      whatIfResults.forEach(res => {
+                        let resVal = res.value;
+                        if (res.unit === 'Months' && typeof res.value === 'number') {
+                          const y = Math.floor(res.value / 12);
+                          const m = res.value % 12;
+                          resVal = m > 0 ? (y > 0 ? `${y} years ${m} months` : `${m} months`) : `${y} years`;
+                        } else if (typeof res.value === 'number') {
+                          resVal = res.isCurrency ? formatIndianCurrency(res.value) : formatIndianNumber(res.value);
+                        }
+                        lines.push(`• *${res.label}:* ${resVal}`);
+                      });
+                    }
                     
                     lines.push('');
                     lines.push(`*View My Calculation:*`);
@@ -250,6 +313,35 @@ export default function CalculatorShell({ definition, slug }: Props) {
           <ResultDisplay results={results} />
         </div>
       </div>
+
+      {/* What-If Section - Spans Full Width below the main grid */}
+      {definition.whatIf && (
+        <div className="mt-8 print:block">
+          <div className={`print:border-t print:border-gray-300 print:pt-6 ${(!values[definition.whatIf.id] || values[definition.whatIf.id] === 0) ? 'print:hidden' : ''}`}>
+            <div className="hidden print:block text-sm uppercase tracking-widest font-bold text-gray-400 mb-6 pb-2 border-b border-gray-200">
+              What-If Scenario
+            </div>
+            
+            {definition.whatIf.type === 'fd-compare' ? (
+              <FDComparePanel 
+                config={definition.whatIf}
+                values={values}
+                onChange={handleChange}
+                originalResults={results}
+                whatIfResults={whatIfResults}
+              />
+            ) : (
+              <WhatIfPanel 
+                config={definition.whatIf} 
+                value={values[definition.whatIf.id] as number}
+                onChange={handleChange}
+                originalResults={results}
+                whatIfResults={whatIfResults}
+              />
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Full Width Visualizations & Tables */}
       {growthData && <GrowthChart data={growthData} />}

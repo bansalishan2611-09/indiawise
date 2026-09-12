@@ -42,13 +42,60 @@ export function calculateStudentLoan(inputs: Record<string, number | string>): C
     }
   }
 
+  const results: CalculatorResult[] = [
+    { id: 'monthly_emi', label: 'Monthly Repayment', value: Math.round(emi), isCurrency: true, isHighlighted: true, description: 'EMI to be paid' },
+    { id: 'total_interest', label: 'Total Interest', value: Math.round(totalInterest), isCurrency: true, description: 'Total cost of loan' },
+    { id: 'total_payment', label: 'Total Payable', value: Math.round(totalPayment), isCurrency: true, description: 'Principal + Interest' },
+    { id: 'principal', label: 'Principal', value: Math.round(principal), isCurrency: true, description: 'Original loan amount' },
+  ];
+
+  const extraPayment = parseInputValue(inputs.extraPayment || 0);
+  let revisedResults: CalculatorResult[] = [];
+  
+  if (extraPayment > 0 && emi > 0) {
+    let balance = principal;
+    let actualMonths = 0;
+    let newTotalInterest = 0;
+    const effectiveEmi = emi + extraPayment;
+    
+    // Safety limit to prevent infinite loops (max 100 years)
+    const MAX_MONTHS = 1200; 
+    
+    for (let period = 1; period <= MAX_MONTHS; period++) {
+      if (balance <= 0) break;
+      
+      const interestForMonth = balance * monthlyRate;
+      let payment = effectiveEmi;
+      
+      // Final month partial payment
+      if (balance + interestForMonth < payment) {
+         payment = balance + interestForMonth; 
+      }
+      
+      const principalForMonth = payment - interestForMonth;
+      
+      newTotalInterest += interestForMonth;
+      balance -= principalForMonth;
+      actualMonths++;
+    }
+    
+    const monthsSaved = n - actualMonths;
+    const interestSaved = totalInterest - newTotalInterest;
+    const newTotalPayment = principal + newTotalInterest;
+    
+    revisedResults = [
+       { id: 'effective_emi', label: 'New Effective Payment', value: Math.round(effectiveEmi), isCurrency: true },
+       { id: 'revised_tenure', label: 'New Tenure', value: actualMonths, unit: 'Months' },
+       { id: 'time_saved', label: 'Time Saved', value: monthsSaved, unit: 'Months' },
+       { id: 'interest_saved', label: 'Interest Saved', value: Math.round(interestSaved), isCurrency: true, isHighlighted: true },
+       { id: 'revised_interest', label: 'New Total Interest', value: Math.round(newTotalInterest), isCurrency: true },
+       { id: 'revised_payment', label: 'New Total Payment', value: Math.round(newTotalPayment), isCurrency: true }
+    ];
+  }
+
   return { 
-    results: [
-      { id: 'monthly_emi', label: 'Monthly Repayment', value: Math.round(emi), isCurrency: true, isHighlighted: true, description: 'EMI to be paid' },
-      { id: 'total_interest', label: 'Total Interest', value: Math.round(totalInterest), isCurrency: true, description: 'Total cost of loan' },
-      { id: 'total_payment', label: 'Total Payable', value: Math.round(totalPayment), isCurrency: true, description: 'Principal + Interest' },
-      { id: 'principal', label: 'Principal', value: Math.round(principal), isCurrency: true, description: 'Original loan amount' },
-    ],
+    results,
+    whatIfResults: revisedResults.length > 0 ? revisedResults : undefined,
     amortization
   };
 }

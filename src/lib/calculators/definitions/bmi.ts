@@ -9,6 +9,15 @@ export const bmiDefinition: CalculatorDefinition = {
   longDescription: 'Use our BMI Calculator to determine your Body Mass Index based on your weight and height. See where you fall on the WHO classification scale and find out your healthy weight range.',
   keywords: ['bmi calculator', 'body mass index', 'bmi calculator india', 'healthy weight calculator', 'weight check'],
   relatedCalculators: ['age-calculator'],
+  whatIf: {
+    id: 'extraWeight',
+    label: 'Change Weight by',
+    min: -50,
+    max: 50,
+    step: 1,
+    defaultValue: 0,
+    unit: 'kg'
+  },
   faqs: [
     {
       question: 'What is BMI?',

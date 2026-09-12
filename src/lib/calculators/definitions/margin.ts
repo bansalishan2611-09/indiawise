@@ -9,6 +9,15 @@ export const marginDefinition: CalculatorDefinition = {
   longDescription: 'Use our Margin & Markup Calculator to instantly find your gross profit, margin percentage, and markup percentage. Essential for retail businesses and pricing strategies.',
   keywords: ['margin calculator', 'markup calculator', 'gross profit calculator', 'business calculator'],
   relatedCalculators: ['gst-calculator'],
+  whatIf: {
+    id: 'extraRevenue',
+    label: 'Change Selling Price by',
+    min: -5000,
+    max: 5000,
+    step: 50,
+    defaultValue: 0,
+    unit: '₹'
+  },
   faqs: [
     {
       question: 'What is the difference between Margin and Markup?',

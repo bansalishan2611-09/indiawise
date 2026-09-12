@@ -24,12 +24,41 @@ export function calculateFD(inputs: Record<string, number | string>): Calculator
     });
   }
 
+  const results: CalculatorResult[] = [
+    { id: 'maturity_amount', label: 'Total Value', value: Math.round(maturityAmount), isCurrency: true, isHighlighted: true, description: 'Maturity Amount' },
+    { id: 'wealth_gained', label: 'Total Returns', value: Math.round(wealthGained), isCurrency: true, description: 'Interest Earned' },
+    { id: 'principal', label: 'Total Investment', value: Math.round(principal), isCurrency: true, description: 'Amount Invested' },
+  ];
+
+  const fdCompareActive = parseInputValue(inputs.fdCompareActive || 0);
+  let revisedResults: CalculatorResult[] = [];
+  
+  if (fdCompareActive === 1) {
+    const compAmount = inputs.compareAmount ? parseInputValue(inputs.compareAmount) : principal;
+    const compRate = inputs.compareRate ? parseInputValue(inputs.compareRate) : annualRate;
+    const compTenure = inputs.compareTenure ? parseInputValue(inputs.compareTenure) : tenureYears;
+    
+    if (compAmount > 0 && compRate > 0 && compTenure > 0) {
+      const compQuarters = compTenure * 4;
+      const compQuarterlyRate = compRate / 400;
+      const compMaturity = compAmount * Math.pow(1 + compQuarterlyRate, compQuarters);
+      const compWealth = compMaturity - compAmount;
+      
+      const diffMaturity = compMaturity - maturityAmount;
+      const diffWealth = compWealth - wealthGained;
+      
+      revisedResults = [
+        { id: 'comp_maturity', label: 'Comparison Maturity', value: Math.round(compMaturity), isCurrency: true },
+        { id: 'comp_interest', label: 'Comparison Interest', value: Math.round(compWealth), isCurrency: true },
+        { id: 'diff_maturity', label: 'Maturity Difference', value: diffMaturity > 0 ? `+₹${Math.round(diffMaturity)}` : `-₹${Math.round(Math.abs(diffMaturity))}`, isHighlighted: true },
+        { id: 'diff_interest', label: 'Interest Difference', value: diffWealth > 0 ? `+₹${Math.round(diffWealth)}` : `-₹${Math.round(Math.abs(diffWealth))}` },
+      ];
+    }
+  }
+
   return { 
-    results: [
-      { id: 'maturity_amount', label: 'Total Value', value: Math.round(maturityAmount), isCurrency: true, isHighlighted: true, description: 'Maturity Amount' },
-      { id: 'wealth_gained', label: 'Total Returns', value: Math.round(wealthGained), isCurrency: true, description: 'Interest Earned' },
-      { id: 'principal', label: 'Total Investment', value: Math.round(principal), isCurrency: true, description: 'Amount Invested' },
-    ],
+    results,
+    whatIfResults: revisedResults.length > 0 ? revisedResults : undefined,
     growthData
   };
 }

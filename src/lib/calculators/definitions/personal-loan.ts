@@ -9,6 +9,15 @@ export const personalLoanDefinition: CalculatorDefinition = {
   longDescription: 'Use our Personal Loan EMI Calculator to find out your monthly installment, total interest payout, and full repayment schedule based on your loan amount, interest rate, and tenure.',
   keywords: ['personal loan emi calculator', 'emi calculator personal loan', 'loan emi calculator', 'india personal loan'],
   relatedCalculators: ['home-loan-emi', 'fd-calculator'],
+  whatIf: {
+    id: 'extraPayment',
+    label: 'Pay Extra Every Month',
+    min: 0,
+    max: 25000,
+    step: 500,
+    defaultValue: 0,
+    unit: '₹'
+  },
   faqs: [
     {
       question: 'How is Personal Loan EMI calculated?',
