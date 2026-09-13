@@ -1,5 +1,6 @@
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import Link from 'next/link';
 
 export const metadata = generatePageMetadata({
   title: 'Disclaimer',
@@ -35,6 +36,13 @@ export default function DisclaimerPage() {
         <section className="space-y-4 mb-10">
           <h2 className="text-2xl font-bold text-navy">No Guarantee</h2>
           <p className="text-muted leading-relaxed">IndiaWise does not guarantee any financial outcome, investment return, or tax saving. Past performance indicators (such as average SIP returns) do not guarantee future results. All investments carry risk.</p>
+        </section>
+
+        <section className="space-y-4 mb-10">
+          <h2 className="text-2xl font-bold text-navy">IndiaWise Mini AI Assistant</h2>
+          <p className="text-muted leading-relaxed">
+            Conversational responses, calculation explanations, and guidance provided by our interactive AI assistant are generated using artificial intelligence and are intended solely for general educational purposes. They do not constitute personalized financial, tax, legal, or medical advice. For complete information on the capabilities and limitations of the assistant, please review our dedicated <Link href="/ai-disclaimer" className="text-brand hover:underline font-medium">AI Disclaimer</Link>.
+          </p>
         </section>
 
         <section className="space-y-4 mb-10">

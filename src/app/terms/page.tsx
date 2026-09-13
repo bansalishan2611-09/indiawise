@@ -1,6 +1,7 @@
 import { siteConfig } from '@/config/site';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import Link from 'next/link';
 
 export const metadata = generatePageMetadata({
   title: 'Terms of Use',
@@ -44,8 +45,13 @@ export default function TermsPage() {
         </section>
 
         <section className="space-y-4 mb-10">
-          <h2 className="text-2xl font-bold text-navy">6. Contact</h2>
-          <p className="text-muted leading-relaxed">For questions about these Terms, please reach out to us at <a href={`mailto:${siteConfig.email}`} className="text-brand hover:underline">{siteConfig.email}</a> or visit our <a href="/contact" className="text-brand hover:underline">Contact Page</a>.</p>
+          <h2 className="text-2xl font-bold text-navy">6. Artificial Intelligence & Automated Assistants</h2>
+          <p className="text-muted leading-relaxed">IndiaWise provides an interactive AI assistant (&quot;IndiaWise Mini AI&quot;) designed to assist users with calculator navigation, understanding calculation outputs, and exploring hypothetical financial scenarios. AI-generated responses are strictly for informational purposes and do not constitute financial, investment, legal, tax, or medical advice. Use of the AI assistant is subject to our dedicated <Link href="/ai-disclaimer" className="text-brand hover:underline font-medium">AI Disclaimer</Link>.</p>
+        </section>
+
+        <section className="space-y-4 mb-10">
+          <h2 className="text-2xl font-bold text-navy">7. Contact</h2>
+          <p className="text-muted leading-relaxed">For questions about these Terms, please reach out to us at <a href={`mailto:${siteConfig.email}`} className="text-brand hover:underline">{siteConfig.email}</a> or visit our <Link href="/contact" className="text-brand hover:underline">Contact Page</Link>.</p>
         </section>
       </div>
     </div>
