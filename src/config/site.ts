@@ -16,5 +16,6 @@ export const siteConfig = {
   name: "IndiaWise",
   url: getSiteUrl(),
   email: "indiawiseofficial@outlook.com",
+  youtube: "https://www.youtube.com/@IndiaWiseOfficial",
   description: "Fast, accurate calculators and everyday utilities designed for India.",
 };
