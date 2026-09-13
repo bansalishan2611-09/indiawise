@@ -41,6 +41,7 @@ export function FDComparePanel({ config, values, onChange, originalResults, what
         
         <button 
           onClick={handleToggle}
+          suppressHydrationWarning
           className={`text-xs font-bold px-3 py-1 rounded-full transition-colors ${isActive ? 'text-gray-500 bg-gray-100 hover:text-red-500 hover:bg-red-50' : 'text-brand bg-brand/10 hover:bg-brand/20'}`}
         >
           {isActive ? 'Close Comparison' : 'Compare Another FD'}
@@ -110,16 +111,22 @@ export function FDComparePanel({ config, values, onChange, originalResults, what
                   </thead>
                   <tbody className="divide-y divide-gray-50">
                     {whatIfResults.filter(r => !r.isHighlighted).map(r => {
-                      const orig = originalResults.find(or => 
-                        or.label.replace('Total ', '') === r.label.replace('Comparison ', '').replace('Total ', '') ||
-                        or.label === r.label
-                      );
+                      // Accurate matching by id or label aliases
+                      const orig = originalResults.find(or => {
+                        if (r.id === 'comp_maturity' && (or.id === 'maturity_amount' || or.label === 'Total Value')) return true;
+                        if (r.id === 'comp_interest' && (or.id === 'wealth_gained' || or.label === 'Total Returns')) return true;
+                        if (or.label === r.label) return true;
+                        if (or.label.replace('Total ', '') === r.label.replace('Comparison ', '').replace('Total ', '')) return true;
+                        return false;
+                      });
                       
+                      const isDifferenceRow = r.id.startsWith('diff_');
+
                       return (
                         <tr key={r.id}>
                           <td className="py-3 px-4 text-sm font-semibold text-gray-600">{r.label}</td>
                           <td className="py-3 px-4 text-sm font-mono text-gray-500">
-                            {orig ? renderValue(orig.value, orig.isCurrency) : '-'}
+                            {isDifferenceRow ? '-' : (orig ? renderValue(orig.value, orig.isCurrency) : '-')}
                           </td>
                           <td className="py-3 px-4 text-sm font-mono font-bold text-navy bg-brand/5">
                             {renderValue(r.value, r.isCurrency)}

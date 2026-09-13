@@ -71,13 +71,16 @@ export const aiTools = [
   },
   {
     name: 'calculateFD',
-    description: 'Calculate Fixed Deposit (FD) maturity value and interest earned.',
+    description: 'Calculate Fixed Deposit (FD) maturity value and interest earned, with optional comparison scenario.',
     parameters: {
       type: 'OBJECT',
       properties: {
         principalAmount: { type: 'NUMBER', description: 'The one-time FD investment amount in ₹. Must be positive.' },
         interestRate: { type: 'NUMBER', description: 'The annual interest rate percentage. Must be positive.' },
-        tenure: { type: 'NUMBER', description: 'The tenure in years. Must be positive.' }
+        tenure: { type: 'NUMBER', description: 'The tenure in years. Must be positive.' },
+        compareAmount: { type: 'NUMBER', description: 'Optional comparison FD deposit amount in ₹ for what-if comparison.' },
+        compareRate: { type: 'NUMBER', description: 'Optional comparison interest rate percentage for what-if comparison.' },
+        compareTenure: { type: 'NUMBER', description: 'Optional comparison tenure in years for what-if comparison.' }
       },
       required: ['principalAmount', 'interestRate', 'tenure']
     }
@@ -207,7 +210,7 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
         return { error: 'Loan tenure must be a positive number of years greater than 0.' };
       }
 
-      if (args.extraEmi) inputs.extraEmi = Number(args.extraEmi);
+      if (args.extraEmi || args.extraPayment) inputs.extraPayment = Number(args.extraEmi || args.extraPayment);
       return extractMainResults(calculateEMI(inputs));
     }
 
@@ -226,7 +229,7 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
         return { error: 'Loan tenure must be a positive number of years greater than 0.' };
       }
 
-      if (args.extraEmi) inputs.extraEmi = Number(args.extraEmi);
+      if (args.extraEmi || args.extraPayment) inputs.extraPayment = Number(args.extraEmi || args.extraPayment);
       return extractMainResults(calculatePersonalLoanEMI(inputs));
     }
       
@@ -245,13 +248,14 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
         return { error: 'Tenure must be a positive number of years greater than 0.' };
       }
 
+      if (args.extraPayment) inputs.extraPayment = Number(args.extraPayment);
       return extractMainResults(calculateStudentLoan(inputs));
     }
       
     case 'calculateSIP': {
       const monthlyInvestment = Number(args.monthlyInvestment);
-      const expectedReturnRate = Number(args.expectedReturnRate);
-      const tenure = Number(args.tenure);
+      const expectedReturnRate = Number(args.expectedReturnRate ?? args.expectedReturn);
+      const tenure = Number(args.tenure ?? args.duration);
 
       if (isNaN(monthlyInvestment) || monthlyInvestment <= 0) {
         return { error: 'Monthly SIP investment must be greater than 0.' };
@@ -263,7 +267,13 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
         return { error: 'Investment tenure must be greater than 0 years.' };
       }
 
-      if (args.extraInvestment) inputs.extraSip = Number(args.extraInvestment);
+      inputs.monthlyInvestment = monthlyInvestment;
+      inputs.expectedReturn = expectedReturnRate;
+      inputs.duration = tenure;
+
+      if (args.extraInvestment || args.extraSip) {
+        inputs.extraInvestment = Number(args.extraInvestment || args.extraSip);
+      }
       return extractMainResults(calculateSIP(inputs));
     }
       
@@ -282,13 +292,24 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
         return { error: 'FD tenure must be greater than 0 years.' };
       }
 
+      inputs.principalAmount = principalAmount;
+      inputs.interestRate = interestRate;
+      inputs.tenure = tenure;
+
+      if (args.compareAmount || args.compareRate || args.compareTenure || args.fdCompareActive === 1 || args.fdCompareActive === '1') {
+        inputs.fdCompareActive = 1;
+        if (args.compareAmount) inputs.compareAmount = Number(args.compareAmount);
+        if (args.compareRate) inputs.compareRate = Number(args.compareRate);
+        if (args.compareTenure) inputs.compareTenure = Number(args.compareTenure);
+      }
+
       return extractMainResults(calculateFD(inputs));
     }
       
     case 'calculateRD': {
       const monthlyInvestment = Number(args.monthlyInvestment);
-      const interestRate = Number(args.interestRate);
-      const tenure = Number(args.tenure);
+      const interestRate = Number(args.interestRate ?? args.expectedReturn);
+      const tenure = Number(args.tenure ?? args.timePeriod);
 
       if (isNaN(monthlyInvestment) || monthlyInvestment <= 0) {
         return { error: 'Monthly RD investment must be greater than 0.' };
@@ -300,7 +321,13 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
         return { error: 'RD tenure must be greater than 0 years.' };
       }
 
-      if (args.extraInvestment) inputs.extraRd = Number(args.extraInvestment);
+      inputs.monthlyInvestment = monthlyInvestment;
+      inputs.expectedReturn = interestRate;
+      inputs.timePeriod = tenure;
+
+      if (args.extraInvestment || args.extraRd) {
+        inputs.extraInvestment = Number(args.extraInvestment || args.extraRd);
+      }
       return extractMainResults(calculateRD(inputs));
     }
       
@@ -315,14 +342,20 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
         return { error: 'Basic salary percentage must be between 1 and 100.' };
       }
 
-      if (args.hikePercentage) inputs.salaryHike = Number(args.hikePercentage);
+      inputs.ctc = ctc;
+      inputs.basicPercentage = basicPercentage;
+
+      if (args.hikePercentage || args.salaryHike) {
+        inputs.hikePercentage = Number(args.hikePercentage || args.salaryHike);
+      }
       return extractMainResults(calculateSalary(inputs));
     }
       
     case 'calculateGST': {
-      const baseAmount = Number(args.baseAmount);
+      const baseAmount = Number(args.baseAmount ?? args.amount);
       const gstRate = Number(args.gstRate);
-      const gstMode = String(args.gstMode || '').toLowerCase();
+      const rawMode = String(args.gstMode || args.calculationType || '').toLowerCase();
+      const gstMode = (rawMode === 'remove' || rawMode === 'inclusive') ? 'inclusive' : 'exclusive';
 
       if (isNaN(baseAmount) || baseAmount <= 0) {
         return { error: 'GST base amount must be a positive number greater than 0.' };
@@ -330,11 +363,14 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
       if (isNaN(gstRate) || gstRate < 0) {
         return { error: 'GST rate cannot be negative.' };
       }
-      if (gstMode !== 'add' && gstMode !== 'remove') {
-        return { error: 'GST mode must be either "add" (exclusive) or "remove" (inclusive).' };
-      }
 
-      inputs.gstMode = gstMode;
+      inputs.amount = baseAmount;
+      inputs.gstRate = gstRate;
+      inputs.calculationType = gstMode;
+
+      if (args.extraAmount) {
+        inputs.extraAmount = Number(args.extraAmount);
+      }
       return extractMainResults(calculateGST(inputs));
     }
 
@@ -343,11 +379,12 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
       if (isNaN(annualIncome) || annualIncome < 0) {
         return { error: 'Annual income cannot be negative.' };
       }
+      inputs.annualIncome = annualIncome;
       return extractMainResults(calculateIncomeTax(inputs));
     }
       
     case 'calculateMargin': {
-      const costOfGoods = Number(args.costOfGoods);
+      const costOfGoods = Number(args.costOfGoods ?? args.cost);
       const revenue = Number(args.revenue);
 
       if (isNaN(costOfGoods) || costOfGoods < 0) {
@@ -357,6 +394,12 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
         return { error: 'Revenue cannot be negative.' };
       }
 
+      inputs.cost = costOfGoods;
+      inputs.revenue = revenue;
+
+      if (args.extraRevenue) {
+        inputs.extraRevenue = Number(args.extraRevenue);
+      }
       return extractMainResults(calculateMargin(inputs));
     }
       
@@ -371,7 +414,14 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
         return { error: 'Weight must be a positive number greater than 0.' };
       }
 
-      if (args.weightChange) inputs.weightChange = Number(args.weightChange);
+      inputs.height = height;
+      inputs.weight = weight;
+      if (args.heightUnit) inputs.height_unit = String(args.heightUnit);
+      if (args.weightUnit) inputs.weight_unit = String(args.weightUnit);
+
+      if (args.weightChange || args.extraWeight) {
+        inputs.extraWeight = Number(args.weightChange || args.extraWeight);
+      }
       return extractMainResults(calculateBMI(inputs));
     }
 

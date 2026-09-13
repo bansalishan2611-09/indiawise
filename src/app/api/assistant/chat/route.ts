@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 
 import { getAllCalculators } from '@/lib/calculators/registry';
 import { getProductionBaseUrl, getSafeProductionUrl, sanitizeAIResponseUrls } from '@/lib/urls';
+import { buildCalculatorAction, CalculatorAction } from '@/lib/calculators/calculator-action';
 
 const apiKey = process.env.GEMINI_API_KEY;
 
@@ -179,6 +180,8 @@ SUGGESTED_QUESTIONS: ["Question 1", "Question 2"]`;
       return NextResponse.json({ error: 'Failed to generate response.' }, { status: 502 });
     }
 
+    let calculatorAction: CalculatorAction | null = null;
+
     // Handle tool calls
     if (response.functionCalls && response.functionCalls.length > 0) {
       const toolCall = response.functionCalls[0];
@@ -186,6 +189,9 @@ SUGGESTED_QUESTIONS: ["Question 1", "Question 2"]`;
       let toolResult: Record<string, unknown>;
       try {
         toolResult = executeAITool(toolCall.name || '', (toolCall.args as Record<string, unknown>) || {});
+        if (!toolResult.error) {
+          calculatorAction = buildCalculatorAction(toolCall.name || '', (toolCall.args as Record<string, unknown>) || {});
+        }
       } catch (err: unknown) {
         const errorMsg = err instanceof Error ? err.message : 'Error executing calculation tool.';
         toolResult = { error: errorMsg };
@@ -228,7 +234,10 @@ SUGGESTED_QUESTIONS: ["Question 1", "Question 2"]`;
 
     if (response.text) {
       const sanitizedText = sanitizeAIResponseUrls(response.text);
-      return NextResponse.json({ text: sanitizedText });
+      return NextResponse.json({
+        text: sanitizedText,
+        calculatorAction: calculatorAction || undefined
+      });
     }
 
     return NextResponse.json({ error: 'Unexpected empty response from model.' }, { status: 500 });

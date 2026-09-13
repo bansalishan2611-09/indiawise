@@ -2,11 +2,13 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { X, Send, Loader2, User, Maximize2, Minimize2 } from 'lucide-react';
+import { X, Send, Loader2, User, Maximize2, Minimize2, Calculator, ExternalLink } from 'lucide-react';
+import { CalculatorAction } from '@/lib/calculators/calculator-action';
 
 interface Message {
   role: 'user' | 'model';
   parts: { text: string }[];
+  calculatorAction?: CalculatorAction;
 }
 
 const INITIAL_GREETING: Message = {
@@ -164,7 +166,11 @@ export function MiniAIChatbot() {
 
       setMessages(prev => [
         ...prev,
-        { role: 'model', parts: [{ text: data.text }] }
+        {
+          role: 'model',
+          parts: [{ text: data.text }],
+          calculatorAction: data.calculatorAction
+        }
       ]);
     } catch (err: unknown) {
       console.error(err);
@@ -479,6 +485,25 @@ export function MiniAIChatbot() {
                           : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm'
                       }`}>
                         {renderText(text)}
+
+                        {!isUser && m.calculatorAction && (
+                          <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-start">
+                            <Link
+                              href={m.calculatorAction.url}
+                              onClick={() => {
+                                if (viewMode === 'full') {
+                                  setViewMode('default');
+                                }
+                              }}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-navy hover:bg-brand text-white text-xs font-semibold rounded-xl shadow-xs hover:shadow-md transition-all group"
+                              title={`Open in ${m.calculatorAction.name}`}
+                            >
+                              <Calculator className="w-3.5 h-3.5 text-blue-300 group-hover:text-white transition-colors" />
+                              <span>Open in Calculator</span>
+                              <ExternalLink className="w-3 h-3 text-blue-300 group-hover:text-white transition-colors ml-0.5" />
+                            </Link>
+                          </div>
+                        )}
                       </div>
 
                       {isUser && (

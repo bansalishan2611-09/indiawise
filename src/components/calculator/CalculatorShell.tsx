@@ -9,7 +9,6 @@ import AmortizationSchedule from './AmortizationSchedule';
 import GrowthChart from './GrowthChart';
 import WhatIfPanel from './WhatIfPanel';
 import { FDComparePanel } from './FDComparePanel';
-import Link from 'next/link';
 import { ChevronDown, Download } from 'lucide-react';
 import { formatIndianCurrency, formatIndianNumber } from '@/lib/calculators/formatters';
 
@@ -32,43 +31,100 @@ function buildDefaults(definition: CalculatorDefinition): Record<string, string 
   return defaults;
 }
 
+function extractValuesFromSearchParams(
+  definition: CalculatorDefinition,
+  searchParams: ReturnType<typeof useSearchParams>
+): Record<string, string | number> {
+  const defaults = buildDefaults(definition);
+  if (!searchParams) return defaults;
+
+  const getParam = (id: string, aliases: string[] = []): string | null => {
+    let val = searchParams.get(id);
+    if (val !== null) return val;
+    for (const a of aliases) {
+      val = searchParams.get(a);
+      if (val !== null) return val;
+    }
+    return null;
+  };
+
+  definition.inputs.forEach(i => {
+    const aliases: string[] = [];
+    if (i.id === 'loanAmount') aliases.push('amount', 'principal');
+    if (i.id === 'interestRate') aliases.push('rate');
+    if (i.id === 'expectedReturn') aliases.push('expectedReturnRate', 'rate', 'interestRate');
+    if (i.id === 'duration' || i.id === 'timePeriod') aliases.push('tenure', 'years');
+    if (i.id === 'amount') aliases.push('baseAmount');
+    if (i.id === 'cost') aliases.push('costOfGoods');
+    if (i.id === 'calculationType') aliases.push('gstMode');
+
+    const val = getParam(i.id, aliases);
+    if (val !== null) {
+      if (i.type === 'number') {
+        const num = parseFloat(val);
+        if (!isNaN(num)) defaults[i.id] = num;
+      } else {
+        if (i.id === 'calculationType') {
+          defaults[i.id] = (val === 'remove' || val === 'inclusive') ? 'inclusive' : 'exclusive';
+        } else {
+          defaults[i.id] = val;
+        }
+      }
+    }
+
+    const unit = searchParams.get(`${i.id}_unit`);
+    if (unit && i.unitOptions?.includes(unit)) {
+      defaults[`${i.id}_unit`] = unit;
+    }
+  });
+
+  if (definition.whatIf) {
+    const whatIfAliases: string[] = [];
+    if (definition.whatIf.id === 'extraPayment') whatIfAliases.push('extra', 'extraEmi');
+    if (definition.whatIf.id === 'extraInvestment') whatIfAliases.push('extraSip', 'extraRd');
+    if (definition.whatIf.id === 'extraWeight') whatIfAliases.push('weightChange');
+    if (definition.whatIf.id === 'hikePercentage') whatIfAliases.push('hike', 'salaryHike');
+
+    const whatIfVal = getParam(definition.whatIf.id, whatIfAliases);
+    if (whatIfVal !== null) {
+      const num = parseFloat(whatIfVal);
+      if (!isNaN(num)) defaults[definition.whatIf.id] = num;
+    }
+
+    if (definition.whatIf.type === 'fd-compare') {
+      ['compareAmount', 'compareRate', 'compareTenure'].forEach(id => {
+        const val = searchParams.get(id);
+        if (val !== null) {
+          const num = parseFloat(val);
+          if (!isNaN(num)) defaults[id] = num;
+        }
+      });
+      if (searchParams.has('compareAmount') || searchParams.has('compareRate') || searchParams.has('compareTenure')) {
+        defaults.fdCompareActive = 1;
+      }
+    }
+  }
+
+  return defaults;
+}
+
 export default function CalculatorShell({ definition, slug }: Props) {
   const searchParams = useSearchParams();
 
   const [values, setValues] = useState<Record<string, string | number>>(() => {
-    const defaults = buildDefaults(definition);
-    if (searchParams) {
-      definition.inputs.forEach(i => {
-        const val = searchParams.get(i.id);
-        if (val !== null) {
-          const num = parseFloat(val);
-          if (!isNaN(num)) defaults[i.id] = num;
-        }
-        const unit = searchParams.get(`${i.id}_unit`);
-        if (unit && i.unitOptions?.includes(unit)) {
-          defaults[`${i.id}_unit`] = unit;
-        }
-      });
-      if (definition.whatIf) {
-        const whatIfVal = searchParams.get(definition.whatIf.id);
-        if (whatIfVal !== null) {
-          const num = parseFloat(whatIfVal);
-          if (!isNaN(num)) defaults[definition.whatIf.id] = num;
-        }
-        
-        if (definition.whatIf.type === 'fd-compare') {
-          ['compareAmount', 'compareRate', 'compareTenure'].forEach(id => {
-            const val = searchParams.get(id);
-            if (val !== null) {
-              const num = parseFloat(val);
-              if (!isNaN(num)) defaults[id] = num;
-            }
-          });
-        }
-      }
-    }
-    return defaults;
+    return extractValuesFromSearchParams(definition, searchParams);
   });
+
+  const [prevParamsString, setPrevParamsString] = useState(() => searchParams ? searchParams.toString() : '');
+
+  // Synchronize state during render when searchParams change via client navigation
+  const currentParamsString = searchParams ? searchParams.toString() : '';
+  if (currentParamsString !== prevParamsString) {
+    setPrevParamsString(currentParamsString);
+    if (currentParamsString) {
+      setValues(extractValuesFromSearchParams(definition, searchParams));
+    }
+  }
 
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [advancedOpen, setAdvancedOpen] = useState(() => {
@@ -84,8 +140,8 @@ export default function CalculatorShell({ definition, slug }: Props) {
 
   let results: CalculatorResult[] = [];
   let whatIfResults: CalculatorResult[] | undefined = undefined;
-  let amortization: any = undefined;
-  let growthData: any = undefined;
+  let amortization: AmortizationRow[] | undefined = undefined;
+  let growthData: GrowthRow[] | undefined = undefined;
 
   if (calculateFn) {
     try {
@@ -103,12 +159,6 @@ export default function CalculatorShell({ definition, slug }: Props) {
     setValues(prev => ({ ...prev, [id]: value }));
     setCalcError(null);
   }, []);
-
-  const getCategoryHref = (slug: string) => {
-    const def = definition;
-    if (slug === 'gst-calculator') return `/calculators/tax/${slug}`;
-    return `/calculators/${def.categorySlug}/${slug}`;
-  };
 
   return (
     <div className="w-full" suppressHydrationWarning>
