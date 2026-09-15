@@ -340,9 +340,6 @@ export default function FinancialHealthExperience() {
   const handleCopyLink = async () => {
     try {
       const urlToCopy = isSharedView && typeof window !== "undefined" ? window.location.href : shareUrl;
-      if (typeof window !== 'undefined' && window.history?.replaceState && !isSharedView) {
-        window.history.replaceState(null, '', shareUrl);
-      }
       await navigator.clipboard.writeText(urlToCopy);
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2500);
@@ -353,9 +350,6 @@ export default function FinancialHealthExperience() {
 
   const handleWhatsAppShare = () => {
     if (typeof window === "undefined") return;
-    if (window.history?.replaceState && !isSharedView && shareUrl) {
-      window.history.replaceState(null, '', shareUrl);
-    }
     const cleanName = sanitizeShareName(shareName || recipientName);
     const heading = formatShareHeading(cleanName, "Financial Health Score");
     let text = "";

@@ -205,7 +205,6 @@ export default function CalculatorShell({ definition, slug }: Props) {
     if (sharer) {
       params.set('name', `${sharer} - Remix`);
     }
-    params.set('mode', 'editable');
     return `${cleanPath}?${params.toString()}`;
   }, [cleanPath, definition, values, baseSharer, shareName]);
 
@@ -264,8 +263,6 @@ export default function CalculatorShell({ definition, slug }: Props) {
 
     if (shareMode === 'readonly') {
       params.set('mode', 'readonly');
-    } else if (shareMode === 'editable') {
-      params.set('mode', 'editable');
     }
 
     const qs = params.toString();
@@ -274,9 +271,6 @@ export default function CalculatorShell({ definition, slug }: Props) {
 
   const handleWhatsAppShare = useCallback(() => {
     const shareUrl = buildShareUrl();
-    if (typeof window !== 'undefined' && window.history?.replaceState) {
-      window.history.replaceState(null, '', shareUrl);
-    }
     const lines: string[] = [];
     const shareHeading = formatShareHeading(effectiveShareName, definition.name);
     const modeTag = shareMode === 'readonly' ? ' (Read-Only Snapshot)' : ' (Interactive Calculation)';
@@ -351,9 +345,6 @@ export default function CalculatorShell({ definition, slug }: Props) {
 
   const handleCopyLink = useCallback(async () => {
     const shareUrl = buildShareUrl();
-    if (typeof window !== 'undefined' && window.history?.replaceState) {
-      window.history.replaceState(null, '', shareUrl);
-    }
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopySuccess(true);
