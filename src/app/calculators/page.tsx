@@ -14,6 +14,16 @@ export default function AllCalculatorsPage() {
     { label: "Calculators", href: "/calculators" },
   ];
   const calculators = getAllCalculators();
+  const financialHealthDefinition = {
+    slug: "financial-health-score",
+    name: "Financial Health Score",
+    category: "Financial Health",
+    categorySlug: "financial-health",
+    shortDescription: "Calculate your 0-100 diagnostic score based on EMIs, savings runway, and compounding momentum.",
+    longDescription: "",
+    inputs: [],
+    keywords: ["financial health score", "financial diagnostic", "health score"],
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -25,6 +35,11 @@ export default function AllCalculatorsPage() {
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <CalculatorCard 
+          key={financialHealthDefinition.slug} 
+          definition={financialHealthDefinition} 
+          href="/financial-health-score" 
+        />
         {calculators.map(def => (
           <CalculatorCard key={def.slug} definition={def} />
         ))}

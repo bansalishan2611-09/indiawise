@@ -1,6 +1,7 @@
 import React from 'react';
 import { WhatIfConfig, CalculatorResult } from '../../lib/calculators/types';
 import { formatIndianCurrency, formatIndianNumber } from '../../lib/calculators/formatters';
+import { Lock } from 'lucide-react';
 
 interface Props {
   config: WhatIfConfig;
@@ -8,16 +9,19 @@ interface Props {
   onChange: (id: string, value: number) => void;
   originalResults: CalculatorResult[];
   whatIfResults?: CalculatorResult[];
+  readOnly?: boolean;
 }
 
-export function FDComparePanel({ config, values, onChange, originalResults, whatIfResults }: Props) {
+export function FDComparePanel({ config, values, onChange, originalResults, whatIfResults, readOnly }: Props) {
   const isActive = values[config.id] === 1;
 
   const handleToggle = () => {
+    if (readOnly) return;
     onChange(config.id, isActive ? 0 : 1);
   };
 
   const handleInput = (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (readOnly) return;
     const val = parseFloat(e.target.value);
     if (!isNaN(val)) onChange(id, val);
     else onChange(id, 0);
@@ -39,13 +43,19 @@ export function FDComparePanel({ config, values, onChange, originalResults, what
           <h3 className="text-xl font-bold text-navy">Compare FD Options</h3>
         </div>
         
-        <button 
-          onClick={handleToggle}
-          suppressHydrationWarning
-          className={`text-xs font-bold px-3 py-1 rounded-full transition-colors ${isActive ? 'text-gray-500 bg-gray-100 hover:text-red-500 hover:bg-red-50' : 'text-brand bg-brand/10 hover:bg-brand/20'}`}
-        >
-          {isActive ? 'Close Comparison' : 'Compare Another FD'}
-        </button>
+        {readOnly ? (
+          <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 flex items-center gap-1">
+            <Lock className="w-2.5 h-2.5 text-slate-500" /> Locked Snapshot
+          </span>
+        ) : (
+          <button 
+            onClick={handleToggle}
+            suppressHydrationWarning
+            className={`text-xs font-bold px-3 py-1 rounded-full transition-colors cursor-pointer ${isActive ? 'text-gray-500 bg-gray-100 hover:text-red-500 hover:bg-red-50' : 'text-brand bg-brand/10 hover:bg-brand/20'}`}
+          >
+            {isActive ? 'Close Comparison' : 'Compare Another FD'}
+          </button>
+        )}
       </div>
 
       {!isActive ? (
@@ -62,7 +72,9 @@ export function FDComparePanel({ config, values, onChange, originalResults, what
                 value={values['compareAmount'] || ''} 
                 onChange={handleInput('compareAmount')}
                 placeholder="e.g. 100000"
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-mono font-bold text-navy focus:outline-none focus:ring-2 focus:ring-brand/50"
+                disabled={readOnly}
+                readOnly={readOnly}
+                className={`w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-mono font-bold text-navy focus:outline-none focus:ring-2 focus:ring-brand/50 ${readOnly ? 'cursor-not-allowed bg-slate-100 text-slate-600' : ''}`}
               />
             </div>
             <div>
@@ -73,7 +85,9 @@ export function FDComparePanel({ config, values, onChange, originalResults, what
                 onChange={handleInput('compareRate')}
                 placeholder="e.g. 7.5"
                 step="0.1"
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-mono font-bold text-navy focus:outline-none focus:ring-2 focus:ring-brand/50"
+                disabled={readOnly}
+                readOnly={readOnly}
+                className={`w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-mono font-bold text-navy focus:outline-none focus:ring-2 focus:ring-brand/50 ${readOnly ? 'cursor-not-allowed bg-slate-100 text-slate-600' : ''}`}
               />
             </div>
             <div>
@@ -83,7 +97,9 @@ export function FDComparePanel({ config, values, onChange, originalResults, what
                 value={values['compareTenure'] || ''} 
                 onChange={handleInput('compareTenure')}
                 placeholder="e.g. 5"
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-mono font-bold text-navy focus:outline-none focus:ring-2 focus:ring-brand/50"
+                disabled={readOnly}
+                readOnly={readOnly}
+                className={`w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-mono font-bold text-navy focus:outline-none focus:ring-2 focus:ring-brand/50 ${readOnly ? 'cursor-not-allowed bg-slate-100 text-slate-600' : ''}`}
               />
             </div>
           </div>

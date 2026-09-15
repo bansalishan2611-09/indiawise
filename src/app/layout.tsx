@@ -39,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} h-full antialiased`}>
       <head>
         {/* Explicitly tell Google our Site Name and Founder to fix AI Overview confusion */}
         <script
@@ -81,7 +81,7 @@ export default function RootLayout({
           />
         )}
       </head>
-      <body className="min-h-full flex flex-col bg-background text-foreground font-sans print:bg-white">
+      <body suppressHydrationWarning className="min-h-full flex flex-col bg-background text-foreground font-sans print:bg-white">
         <div className="hidden print:flex items-center justify-between border-b border-gray-200 pb-4 mb-8">
           <div className="flex items-center gap-3">
             <img src="/images/favicon.png" alt="IndiaWise Icon" className="h-10 w-10 object-contain" />

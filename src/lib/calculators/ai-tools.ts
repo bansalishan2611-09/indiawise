@@ -10,6 +10,7 @@ import { calculateMargin } from './logic/margin';
 import { calculateBMI } from './logic/bmi';
 import { calculateIncomeTax } from './logic/income-tax';
 import { calculateAge } from './logic/age';
+import { calculateFinancialHealthScore, simulateFinancialHealthWhatIf } from './logic/financial-health-score';
 
 // Define JSON Schemas for each tool. We will pass these directly to @google/genai
 
@@ -180,6 +181,40 @@ export const aiTools = [
         birthDay: { type: 'NUMBER', description: 'Birth day (1-31).' }
       },
       required: ['birthYear', 'birthMonth', 'birthDay']
+    }
+  },
+  {
+    name: 'calculateFinancialHealthScore',
+    description: 'Calculate the IndiaWise Financial Health Score (0-100), health category, and 4 dimension scores (Debt Burden, Investment Rate, Emergency Buffer, Savings Capacity) using deterministic math.',
+    parameters: {
+      type: 'OBJECT',
+      properties: {
+        income: { type: 'NUMBER', description: 'Monthly in-hand salary in Indian Rupees (₹). Must be positive.' },
+        emi: { type: 'NUMBER', description: 'Total monthly EMIs (home, car, personal, education) in ₹. Must be non-negative.' },
+        investment: { type: 'NUMBER', description: 'Monthly investments (SIP, mutual funds, EPF/PPF, NPS) in ₹. Must be non-negative.' },
+        savings: { type: 'NUMBER', description: 'Current liquid emergency savings (savings account, liquid mutual funds, short FDs) in ₹. Must be non-negative.' },
+        expenses: { type: 'NUMBER', description: 'Optional essential monthly household/living expenses in ₹.' },
+        age: { type: 'NUMBER', description: 'Optional age of the user (18-100).' },
+        cityTier: { type: 'STRING', description: 'Optional location tier: "tier1" (metros), "tier2", or "tier3".' }
+      },
+      required: ['income', 'emi', 'investment']
+    }
+  },
+  {
+    name: 'simulateFinancialHealthWhatIf',
+    description: 'Simulate how changes like increasing monthly investments, reducing EMIs, or boosting savings impact the IndiaWise Financial Health Score.',
+    parameters: {
+      type: 'OBJECT',
+      properties: {
+        income: { type: 'NUMBER', description: 'Current monthly in-hand salary in ₹.' },
+        emi: { type: 'NUMBER', description: 'Current monthly EMIs in ₹.' },
+        investment: { type: 'NUMBER', description: 'Current monthly investments in ₹.' },
+        savings: { type: 'NUMBER', description: 'Current liquid emergency savings in ₹.' },
+        extraInvestment: { type: 'NUMBER', description: 'Proposed additional monthly investment in ₹ (e.g. 5000).' },
+        emiReduction: { type: 'NUMBER', description: 'Proposed monthly EMI reduction in ₹ (e.g. 5000).' },
+        extraSavings: { type: 'NUMBER', description: 'Proposed additional liquid savings buffer in ₹ (e.g. 50000).' }
+      },
+      required: ['income', 'emi', 'investment']
     }
   }
 ];
@@ -442,6 +477,88 @@ export function executeAITool(name: string, args: Record<string, unknown>): Reco
       }
 
       return extractMainResults(calculateAge(inputs));
+    }
+
+    case 'calculateFinancialHealthScore': {
+      const income = Number(args.income);
+      const emi = Number(args.emi);
+      const investment = Number(args.investment);
+      const savings = Number(args.savings ?? 0);
+      const expenses = args.expenses ? Number(args.expenses) : undefined;
+      const age = args.age ? Number(args.age) : 28;
+      const cityTier = (args.cityTier === 'tier2' || args.cityTier === 'tier3') ? args.cityTier : 'tier1';
+
+      if (isNaN(income) || income <= 0) {
+        return { error: 'Monthly income must be a positive number greater than 0.' };
+      }
+      if (isNaN(emi) || emi < 0) {
+        return { error: 'Monthly EMI cannot be negative.' };
+      }
+      if (isNaN(investment) || investment < 0) {
+        return { error: 'Monthly investment cannot be negative.' };
+      }
+
+      const res = calculateFinancialHealthScore({
+        income,
+        emi,
+        investment,
+        savings,
+        expenses,
+        age,
+        cityTier
+      });
+
+      return {
+        score: res.score,
+        category: res.category,
+        categoryHeadline: res.categoryHeadline,
+        summarySentence: res.summarySentence,
+        dimensions: res.dimensions.map(d => ({
+          name: d.name,
+          score: d.score,
+          metric: d.metricValue,
+          impact: d.impact,
+          summary: d.summary
+        })),
+        realityChecks: res.realityChecks.map(rc => rc.headline),
+        actionPlan: res.actionPlan.map(ap => ap.title)
+      };
+    }
+
+    case 'simulateFinancialHealthWhatIf': {
+      const income = Number(args.income);
+      const emi = Number(args.emi);
+      const investment = Number(args.investment);
+      const savings = Number(args.savings ?? 0);
+
+      if (isNaN(income) || income <= 0) {
+        return { error: 'Monthly income must be a positive number greater than 0.' };
+      }
+
+      const sim = simulateFinancialHealthWhatIf(
+        {
+          income,
+          emi: isNaN(emi) ? 0 : emi,
+          investment: isNaN(investment) ? 0 : investment,
+          savings: isNaN(savings) ? 0 : savings,
+          age: 28,
+          cityTier: 'tier1'
+        },
+        {
+          extraInvestment: args.extraInvestment ? Number(args.extraInvestment) : 0,
+          emiReduction: args.emiReduction ? Number(args.emiReduction) : 0,
+          extraSavings: args.extraSavings ? Number(args.extraSavings) : 0
+        }
+      );
+
+      return {
+        originalScore: sim.originalScore,
+        newScore: sim.newScore,
+        scoreDelta: sim.scoreDelta,
+        originalCategory: sim.originalCategory,
+        newCategory: sim.newCategory,
+        explanation: sim.explanation
+      };
     }
 
     default:

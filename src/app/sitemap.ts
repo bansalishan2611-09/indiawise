@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticRoutes = [
     '',
+    '/financial-health-score',
     '/calculators',
     '/categories',
     '/guides',
@@ -35,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  // You can also add dynamic Category pages here if needed.
+  // Dynamic Category pages
   const categories = Array.from(new Set(getAllCalculators().map(def => def.categorySlug)));
   const categoryRoutes = categories.map((cat) => ({
     url: `${siteUrl}/categories/${cat}`,
@@ -44,5 +45,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...categoryRoutes, ...calculatorRoutes];
+  // Educational Guide pages
+  const guides = [
+    'personal-finance-101',
+    'understanding-income-tax',
+  ];
+  const guideRoutes = guides.map((slug) => ({
+    url: `${siteUrl}/guides/${slug}`,
+    lastModified: new Date().toISOString().split('T')[0],
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...categoryRoutes, ...calculatorRoutes, ...guideRoutes];
 }

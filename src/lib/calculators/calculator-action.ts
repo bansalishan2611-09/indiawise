@@ -45,6 +45,42 @@ export function buildCalculatorAction(
   toolName: string,
   args: Record<string, unknown>
 ): CalculatorAction | null {
+  if (toolName === 'calculateFinancialHealthScore' || toolName === 'simulateFinancialHealthWhatIf') {
+    const income = Number(args.income);
+    const emi = Number(args.emi);
+    const investment = Number(args.investment);
+
+    if (!isValidNumber(income, 5000) || !isValidNumber(emi, 0) || !isValidNumber(investment, 0)) {
+      return null;
+    }
+
+    const params = new URLSearchParams();
+    params.set('income', income.toString());
+    params.set('emi', emi.toString());
+    params.set('investment', investment.toString());
+
+    if (isValidNumber(args.savings, 0)) {
+      params.set('savings', Number(args.savings).toString());
+    }
+    if (isValidNumber(args.expenses, 0)) {
+      params.set('expenses', Number(args.expenses).toString());
+    }
+    if (isValidNumber(args.age, 18, 100)) {
+      params.set('age', Number(args.age).toString());
+    }
+    if (args.cityTier === 'tier2' || args.cityTier === 'tier3') {
+      params.set('cityTier', String(args.cityTier));
+    }
+
+    const queryString = params.toString();
+    return {
+      slug: 'financial-health-score',
+      categorySlug: 'finance',
+      name: 'Financial Health Score',
+      url: `/financial-health-score${queryString ? `?${queryString}` : ''}`,
+    };
+  }
+
   const slug = TOOL_TO_CALCULATOR_SLUG[toolName];
   if (!slug) return null;
 

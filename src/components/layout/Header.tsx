@@ -2,9 +2,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Calculator, Grid3x3, BookOpen, Info, Search } from 'lucide-react';
+import { Menu, X, Calculator, Grid3x3, BookOpen, Info, Search, Sparkles } from 'lucide-react';
 
 const navLinks = [
+  { href: '/financial-health-score', label: 'Financial Health', icon: Sparkles },
   { href: '/calculators', label: 'Calculators', icon: Calculator },
   { href: '/categories', label: 'Categories', icon: Grid3x3 },
   { href: '/guides', label: 'Guides', icon: BookOpen },

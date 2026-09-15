@@ -6,6 +6,7 @@ import { Calculator, Search, TrendingUp, ChevronRight } from "lucide-react";
 
 // In Phase 2/3, this will be fetched from the calculator engine
 const calculators = [
+  { name: "Financial Health Score", href: "/financial-health-score", category: "Financial Health" },
   { name: "Home Loan EMI", href: "/calculators/finance/home-loan-emi", category: "Finance" },
   { name: "Personal Loan EMI", href: "/calculators/finance/personal-loan-emi", category: "Finance" },
   { name: "SIP Calculator", href: "/calculators/finance/sip-calculator", category: "Finance" },

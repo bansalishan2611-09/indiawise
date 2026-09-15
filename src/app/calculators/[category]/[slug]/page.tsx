@@ -85,10 +85,12 @@ export default async function CalculatorPage({ params }: { params: { category: s
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       )}
-      <Breadcrumbs items={breadcrumbs} />
+      <div className="print:hidden">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
       
       {/* Page Header */}
-      <div className="mt-6 mb-10">
+      <div className="mt-6 mb-10 print:hidden">
         <h1 className="text-4xl font-extrabold text-navy tracking-tight mb-3">{definition.name}</h1>
         <p className="text-lg text-muted max-w-2xl">{definition.shortDescription}</p>
       </div>

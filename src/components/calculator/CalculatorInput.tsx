@@ -9,9 +9,10 @@ interface Props {
   unitValue?: string;
   onChange: (id: string, value: string | number) => void;
   error?: string;
+  readOnly?: boolean;
 }
 
-export default function CalculatorInput({ input, value, unitValue, onChange, error }: Props) {
+export default function CalculatorInput({ input, value, unitValue, onChange, error, readOnly }: Props) {
   const baseInput = 'w-full rounded-xl border bg-white px-4 py-3 text-navy font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-brand/50 transition-all shadow-sm';
   const errorClass = error ? 'border-red-400' : 'border-border focus:border-brand';
   
@@ -73,16 +74,26 @@ export default function CalculatorInput({ input, value, unitValue, onChange, err
               value={localValue}
               onChange={handleTextChange}
               onBlur={handleBlur}
+              disabled={readOnly}
+              readOnly={readOnly}
               placeholder={input.placeholder}
               suppressHydrationWarning
               aria-describedby={input.helpText ? `${input.id}-help` : undefined}
-              className={cn(baseInput, errorClass, input.unit === '₹' && !input.unitOptions ? 'pl-9' : '', input.unit && input.unit !== '₹' ? 'pr-16' : '', input.unitOptions ? 'pr-24' : '')}
+              className={cn(
+                baseInput,
+                errorClass,
+                input.unit === '₹' && !input.unitOptions ? 'pl-9' : '',
+                input.unit && input.unit !== '₹' ? 'pr-16' : '',
+                input.unitOptions ? 'pr-24' : '',
+                readOnly && 'bg-slate-50 text-slate-600 cursor-not-allowed border-dashed'
+              )}
             />
             {input.unitOptions ? (
-              <div className="absolute right-1 top-1 bottom-1 flex items-center bg-alt border-l border-border rounded-r-xl group hover:bg-gray-100 transition-colors">
+              <div className={cn("absolute right-1 top-1 bottom-1 flex items-center bg-alt border-l border-border rounded-r-xl group hover:bg-gray-100 transition-colors", readOnly && "opacity-60 pointer-events-none")}>
                 <select
                   value={unitValue}
                   onChange={(e) => onChange(`${input.id}_unit`, e.target.value)}
+                  disabled={readOnly}
                   suppressHydrationWarning
                   className="h-full w-full bg-transparent appearance-none pl-3 pr-8 text-sm font-semibold text-navy focus:outline-none focus:ring-2 focus:ring-brand/50 rounded-r-xl cursor-pointer"
                 >
@@ -100,12 +111,13 @@ export default function CalculatorInput({ input, value, unitValue, onChange, err
           </div>
           
           {hasSlider && (
-            <div className="pt-2 pb-1 px-1">
+            <div className={cn("pt-2 pb-1 px-1", readOnly && "opacity-40 pointer-events-none")}>
               <input 
                 type="range"
                 min={input.min}
                 max={input.max}
                 step={input.step || 1}
+                disabled={readOnly}
                 value={typeof value === 'number' ? value : parseFloat(value as string) || 0}
                 onChange={(e) => onChange(input.id, parseFloat(e.target.value))}
                 className="w-full h-1.5 bg-border rounded-lg appearance-none cursor-pointer accent-brand"
@@ -124,8 +136,9 @@ export default function CalculatorInput({ input, value, unitValue, onChange, err
           id={input.id}
           value={value}
           onChange={e => onChange(input.id, e.target.value)}
+          disabled={readOnly}
           suppressHydrationWarning
-          className={cn(baseInput, errorClass, 'cursor-pointer')}
+          className={cn(baseInput, errorClass, 'cursor-pointer', readOnly && 'bg-slate-50 text-slate-600 cursor-not-allowed')}
         >
           {input.options?.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -134,7 +147,7 @@ export default function CalculatorInput({ input, value, unitValue, onChange, err
       )}
 
       {input.type === 'radio' && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className={cn("grid grid-cols-2 gap-3", readOnly && "opacity-60 pointer-events-none")}>
           {input.options?.map(opt => (
             <label key={opt.value} className={cn('flex items-center justify-center p-3 rounded-xl border cursor-pointer transition-all text-sm font-semibold', String(value) === String(opt.value) ? 'border-brand bg-brand/5 text-brand shadow-sm' : 'border-border bg-white text-navy hover:bg-alt hover:border-brand/30')}>
               <input
@@ -143,6 +156,7 @@ export default function CalculatorInput({ input, value, unitValue, onChange, err
                 value={opt.value}
                 checked={String(value) === String(opt.value)}
                 onChange={() => onChange(input.id, opt.value)}
+                disabled={readOnly}
                 className="sr-only"
               />
               <span>{opt.label}</span>

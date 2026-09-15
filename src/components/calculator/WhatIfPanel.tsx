@@ -2,6 +2,7 @@
 import { WhatIfConfig, CalculatorResult } from '@/lib/calculators/types';
 import { formatIndianCurrency, formatIndianNumber } from '@/lib/calculators/formatters';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { Lock } from 'lucide-react';
 
 interface Props {
   config: WhatIfConfig;
@@ -9,6 +10,7 @@ interface Props {
   onChange: (id: string, value: number) => void;
   originalResults: CalculatorResult[];
   whatIfResults?: CalculatorResult[];
+  readOnly?: boolean;
 }
 
 function formatMonthsToYears(months: number) {
@@ -24,14 +26,16 @@ function renderValue(val: string | number, isCurrency?: boolean, isMonths?: bool
   return isCurrency ? formatIndianCurrency(val) : formatIndianNumber(val);
 }
 
-export default function WhatIfPanel({ config, value, onChange, originalResults, whatIfResults }: Props) {
+export default function WhatIfPanel({ config, value, onChange, originalResults, whatIfResults, readOnly }: Props) {
   const isCurrency = config.unit === '₹' || config.unit === 'Rs.';
 
   const handleSlider = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (readOnly) return;
     onChange(config.id, parseFloat(e.target.value));
   };
 
   const handleNumberInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (readOnly) return;
     const val = parseFloat(e.target.value);
     if (!isNaN(val)) onChange(config.id, val);
     else onChange(config.id, 0);
@@ -84,20 +88,26 @@ export default function WhatIfPanel({ config, value, onChange, originalResults, 
           <h3 className="text-xl font-bold text-navy">Explore What-If</h3>
         </div>
         
-        {value !== config.defaultValue && (
-          <button 
-            onClick={() => onChange(config.id, config.defaultValue || 0)}
-            className="text-xs font-bold text-gray-500 hover:text-brand bg-gray-100 hover:bg-brand/10 px-3 py-1 rounded-full transition-colors"
-          >
-            Reset
-          </button>
+        {readOnly ? (
+          <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 flex items-center gap-1">
+            <Lock className="w-2.5 h-2.5 text-slate-500" /> Locked Snapshot
+          </span>
+        ) : (
+          value !== config.defaultValue && (
+            <button 
+              onClick={() => onChange(config.id, config.defaultValue || 0)}
+              className="text-xs font-bold text-gray-500 hover:text-brand bg-gray-100 hover:bg-brand/10 px-3 py-1 rounded-full transition-colors cursor-pointer"
+            >
+              Reset
+            </button>
+          )
         )}
       </div>
       
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <label className="text-sm font-bold text-gray-600 uppercase tracking-wide">{config.label}</label>
-          <div className="flex bg-gray-50 border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-brand/50 transition-shadow">
+          <div className={`flex bg-gray-50 border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-brand/50 transition-shadow ${readOnly ? 'bg-slate-100/80 cursor-not-allowed opacity-90' : ''}`}>
             {isCurrency && <div className="pl-4 pr-2 py-2 flex items-center text-gray-500 font-bold bg-transparent">₹</div>}
             <input 
               type="number" 
@@ -106,7 +116,9 @@ export default function WhatIfPanel({ config, value, onChange, originalResults, 
               min={config.min}
               max={config.max}
               step={config.step}
-              className="w-28 py-2 pr-4 bg-transparent font-mono font-bold text-navy focus:outline-none text-right"
+              disabled={readOnly}
+              readOnly={readOnly}
+              className={`w-28 py-2 pr-4 bg-transparent font-mono font-bold text-navy focus:outline-none text-right ${readOnly ? 'cursor-not-allowed text-slate-600' : ''}`}
             />
           </div>
         </div>
@@ -118,7 +130,8 @@ export default function WhatIfPanel({ config, value, onChange, originalResults, 
           step={config.step}
           value={value || 0}
           onChange={handleSlider}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand"
+          disabled={readOnly}
+          className={`w-full h-2 bg-gray-200 rounded-lg appearance-none accent-brand ${readOnly ? 'opacity-40 pointer-events-none cursor-not-allowed' : 'cursor-pointer'}`}
         />
         <div className="flex justify-between mt-2 text-xs font-bold text-gray-400">
           <span>{isCurrency ? '₹' : ''}{formatIndianNumber(config.min)}{config.unit && !isCurrency ? ` ${config.unit}` : ''}</span>

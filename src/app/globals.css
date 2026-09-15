@@ -73,3 +73,70 @@ body {
     text-wrap: balance;
   }
 }
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 12mm 14mm 14mm 14mm;
+    @bottom-left {
+      content: "IndiaWise • Calculation Report • indiawise.vercel.app";
+      font-size: 8pt;
+      color: #64748b;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      font-weight: 600;
+      color: #0f172a;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt;
+    line-height: 1.4;
+    overflow: visible !important;
+    width: 100% !important;
+  }
+
+  /* Critical Page-Break Avoidance for Logical Units */
+  .print-avoid-break,
+  .print-card,
+  .break-inside-avoid,
+  .break-inside-avoid-page {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Table Rules: Never cut rows in half, always repeat header on every page */
+  table {
+    page-break-inside: auto;
+    width: 100% !important;
+  }
+
+  tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  thead {
+    display: table-header-group !important;
+  }
+
+  tfoot {
+    display: table-footer-group !important;
+  }
+
+  .shadow-xs, .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl {
+    box-shadow: none !important;
+  }
+}
+

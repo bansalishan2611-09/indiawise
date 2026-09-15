@@ -112,7 +112,7 @@ export function MiniAIChatbot() {
         return;
       }
 
-      if (isTyping) return;
+      if (isTyping || e.ctrlKey || e.metaKey || e.altKey) return;
 
       if ((e.key === 'c' || e.key === 'C') && !isOpen) {
         e.preventDefault();

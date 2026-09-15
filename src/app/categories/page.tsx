@@ -1,7 +1,7 @@
 import { generatePageMetadata } from "@/lib/seo/metadata";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import CategoryCard from "@/components/calculator/CategoryCard";
-import { Landmark, Briefcase, Receipt, GraduationCap, Building2, Calculator as CalcIcon } from "lucide-react";
+import { Landmark, Briefcase, Receipt, GraduationCap, Building2, Calculator as CalcIcon, Sparkles } from "lucide-react";
 import { getCalculatorsByCategory } from "@/lib/calculators/registry";
 
 export const metadata = generatePageMetadata({
@@ -25,6 +25,15 @@ export default function AllCategoriesPage() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <CategoryCard 
+          slug="financial-health" 
+          name="Financial Health" 
+          description="Personalized, deterministic diagnostic score, EMI burden, and emergency runway." 
+          icon={<Sparkles className="w-6 h-6 text-brand" />} 
+          count={1}
+          href="/financial-health-score"
+          badge="Flagship"
+        />
         <CategoryCard slug="finance" name="Finance" description="EMI, SIP, Loans, and Investment planners." icon={<Landmark className="w-6 h-6" />} count={getCalculatorsByCategory('finance').length} />
         <CategoryCard slug="salary" name="Salary" description="In-hand salary, CTC, and increment calculators." icon={<Briefcase className="w-6 h-6" />} count={getCalculatorsByCategory('salary').length} />
         <CategoryCard slug="tax" name="Tax" description="GST, Income Tax, and deductions." icon={<Receipt className="w-6 h-6" />} count={getCalculatorsByCategory('tax').length} />
