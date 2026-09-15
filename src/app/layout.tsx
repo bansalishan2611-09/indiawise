@@ -31,6 +31,16 @@ export const metadata: Metadata = {
   verification: {
     google: "UBOQH9JIs8VlJziTn14mqIpAPuZkTBln6uO_IBb1BZ4",
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/images/favicon.png', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 export default function RootLayout({
