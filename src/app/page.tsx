@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Calculator, Percent, FileText, Briefcase, Calendar, Receipt, TrendingUp, ShieldCheck, Zap, LineChart, Target, Coins, ArrowRight } from "lucide-react";
+import { Calculator, Percent, FileText, Briefcase, Calendar, Receipt, TrendingUp, ShieldCheck, Zap, LineChart, Target, Coins, ArrowRight, Sparkles } from "lucide-react";
 import HeroSearch from "@/components/search/HeroSearch";
 import { siteConfig } from "@/config/site";
 
@@ -18,11 +18,30 @@ export default function Home() {
     }
   };
 
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteConfig.name,
+    url: siteConfig.url,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteConfig.url}/search?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <div className="flex flex-col items-center w-full">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
       {/* Hero Section */}
       <section className="relative w-full bg-white pt-16 pb-24 sm:pt-24 sm:pb-32 px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center border-b border-border">
@@ -55,6 +74,31 @@ export default function Home() {
             <div className="flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-brand"/> Local Processing</div>
             <div className="flex items-center gap-2"><Zap className="w-5 h-5 text-brand"/> Instant Results</div>
           </div>
+        </div>
+      </section>
+
+      {/* Flagship Diagnostic Spotlight */}
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+        <div className="bg-gradient-to-r from-navy via-slate-900 to-indigo-950 rounded-3xl p-6 sm:p-10 text-white shadow-xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand/25 border border-brand/40 text-brand text-xs font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-brand" />
+              Flagship Diagnostic Tool
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
+              What is your Financial Health Score?
+            </h2>
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              Get a 360° confidential diagnosis of your debt-to-income, emergency buffer, and compounding velocity. 100% free, client-side, with zero personal data stored.
+            </p>
+          </div>
+          <Link
+            href="/financial-health-score"
+            className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-brand text-white font-semibold text-sm hover:bg-brand/90 transition-all shadow-lg hover:shadow-brand/30"
+          >
+            <span>Check Your Score (0-100)</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </section>
 
@@ -101,7 +145,7 @@ export default function Home() {
               </div>
             </Link>
 
-            <Link href="/calculators/salary/in-hand-salary" className="group col-span-1 md:col-span-1 md:row-span-1 bg-white rounded-3xl p-6 border border-border hover:border-brand hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+            <Link href="/calculators/salary/in-hand-salary-calculator" className="group col-span-1 md:col-span-1 md:row-span-1 bg-white rounded-3xl p-6 border border-border hover:border-brand hover:shadow-md transition-all duration-300 flex flex-col justify-between">
               <div>
                 <div className="w-10 h-10 bg-alt rounded-xl flex items-center justify-center text-brand mb-4 group-hover:bg-brand group-hover:text-white transition-colors duration-300">
                   <Briefcase className="w-5 h-5" />
@@ -138,12 +182,12 @@ export default function Home() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { name: "Finance", desc: "Loans, investments, and returns", icon: LineChart, href: "/calculators/finance" },
-              { name: "Salary", desc: "Income, tax deductions, and take-home", icon: Briefcase, href: "/calculators/salary" },
-              { name: "Tax", desc: "GST, income tax, and compliance", icon: Receipt, href: "/calculators/tax" },
-              { name: "Education", desc: "Marks, percentages, and CGPA", icon: Target, href: "/calculators/education" },
-              { name: "Business", desc: "Margins, profits, and break-even", icon: Coins, href: "/calculators/business" },
-              { name: "Everyday", desc: "Dates, age, time, and units", icon: Calendar, href: "/calculators/everyday" },
+              { name: "Finance", desc: "Loans, investments, and returns", icon: LineChart, href: "/categories/finance" },
+              { name: "Salary", desc: "Income, tax deductions, and take-home", icon: Briefcase, href: "/categories/salary" },
+              { name: "Tax", desc: "GST, income tax, and compliance", icon: Receipt, href: "/categories/tax" },
+              { name: "Education", desc: "Marks, percentages, and CGPA", icon: Target, href: "/categories/education" },
+              { name: "Business", desc: "Margins, profits, and break-even", icon: Coins, href: "/categories/business" },
+              { name: "Everyday", desc: "Dates, age, time, and units", icon: Calendar, href: "/categories/everyday" },
             ].map((cat, i) => (
               <Link key={i} href={cat.href} className="group bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-border hover:border-brand transition-colors shadow-sm hover:shadow-md flex items-start gap-4">
                 <div className="w-12 h-12 bg-alt rounded-2xl flex items-center justify-center text-navy group-hover:bg-brand group-hover:text-white transition-colors shrink-0">
@@ -170,7 +214,7 @@ export default function Home() {
             <p className="text-lg text-muted">
               Don't just plug numbers into a tool. Learn the mathematics behind loan amortization and how changing interest rates affect your total payout over decades.
             </p>
-            <Link href="/guides/how-emi-is-calculated" className="inline-flex items-center justify-center gap-2 bg-navy text-white px-6 py-3 rounded-xl font-semibold hover:bg-navy/90 transition-colors shadow-md">
+            <Link href="/guides/how-home-loan-emi-is-calculated" className="inline-flex items-center justify-center gap-2 bg-navy text-white px-6 py-3 rounded-xl font-semibold hover:bg-navy/90 transition-colors shadow-md">
               Read the Guide <FileText className="w-4 h-4" />
             </Link>
           </div>

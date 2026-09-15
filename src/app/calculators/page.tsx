@@ -4,8 +4,8 @@ import { getAllCalculators } from "@/lib/calculators/registry";
 import CalculatorCard from "@/components/calculator/CalculatorCard";
 
 export const metadata = generatePageMetadata({
-  title: "All Calculators",
-  description: "Find the right calculator for your next decision. Fast, accurate utilities designed for India.",
+  title: "All Calculators — Free Financial, Tax & Loan Tools India | IndiaWise",
+  description: "Browse all 100% free financial, loan, tax, and salary calculators designed for Indian users. Accurate, private, and instantaneous.",
   path: "/calculators",
 });
 

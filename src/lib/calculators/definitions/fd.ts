@@ -38,4 +38,34 @@ export const fdDefinition: CalculatorDefinition = {
     { id: 'tenure', label: 'Time Period', type: 'number', unit: 'Yrs', min: 1, max: 20, step: 1, defaultValue: 5, helpText: 'FD locking period' },
   ],
   schemaType: 'FinancialProduct',
+  seoTitle: 'Fixed Deposit (FD) Calculator India (2025) — Quarterly Compounding & Returns | IndiaWise',
+  seoDescription: 'Calculate maturity value and interest earned on bank fixed deposits in India. Uses official quarterly compounding formulas with Senior Citizen comparison.',
+  formulaExplanation: {
+    title: 'Bank Fixed Deposit Quarterly Compounding Formula',
+    formula: 'A = P × [1 + (r / 400)]^(4 × t)',
+    explanation: 'Where A is the total maturity payout, P is the principal deposited, r is the annual nominal interest rate in percent, and t is the investment tenure in years. Major scheduled commercial banks in India (such as SBI, HDFC, ICICI, and Axis) calculate interest using quarterly rests.'
+  },
+  benchmarks: {
+    title: 'Representative Bank FD Returns Across Tenures (at 7.00% p.a.)',
+    subtitle: 'Illustrative maturity values for varying principal amounts with quarterly compounding',
+    headers: ['Deposit Amount', '1 Year', '3 Years', '5 Years', '10 Years'],
+    rows: [
+      ['₹50,00,00', '₹53,593', '₹61,572', '₹70,739', '₹1,00,080'],
+      ['₹1,00,000', '₹1,07,186', '₹1,23,144', '₹1,41,478', '₹2,00,160'],
+      ['₹5,00,000', '₹5,35,929', '₹6,15,719', '₹7,07,389', '₹10,00,799'],
+      ['₹10,00,000', '₹10,71,859', '₹12,31,439', '₹14,14,778', '₹20,01,597']
+    ]
+  },
+  relatedGuides: [
+    {
+      title: 'SIP vs FD: Which Investment is Right for You?',
+      slug: 'sip-vs-fd-investment-comparison',
+      description: 'Explore the risk-return spectrum, real inflation drag, and taxation differences between fixed income and equity.'
+    },
+    {
+      title: 'How Much Emergency Fund Should You Have in India?',
+      slug: 'how-much-emergency-fund-should-you-have',
+      description: 'Find out why high-liquidity bank FDs remain an ideal vehicle for capital preservation.'
+    }
+  ]
 };

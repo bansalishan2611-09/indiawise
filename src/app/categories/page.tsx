@@ -5,8 +5,8 @@ import { Landmark, Briefcase, Receipt, GraduationCap, Building2, Calculator as C
 import { getCalculatorsByCategory } from "@/lib/calculators/registry";
 
 export const metadata = generatePageMetadata({
-  title: "All Categories",
-  description: "Browse all calculator categories on IndiaWise.",
+  title: "Calculator Categories — Finance, Tax, Salary & Business | IndiaWise",
+  description: "Explore all calculator categories on IndiaWise: Finance, Salary, Tax, Education, Business, and Everyday tools built for India.",
   path: "/categories",
 });
 

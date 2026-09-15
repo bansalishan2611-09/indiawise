@@ -38,4 +38,34 @@ Simply input your Gross Annual Income. If you have active investments or claim H
     { id: 'homeLoanInterest', label: 'Home Loan Interest', type: 'number', unit: '₹', min: 0, max: 200000, step: 10000, defaultValue: 0, isAdvanced: true, helpText: 'Interest paid on home loan (Sec 24b, Max ₹2L)' },
     { id: 'otherDeductions', label: 'Other Deductions', type: 'number', unit: '₹', min: 0, max: 1000000, step: 10000, defaultValue: 0, isAdvanced: true, helpText: 'Any other exemptions for Old Regime' },
   ],
+  seoTitle: 'Income Tax Calculator FY 2024-25 (AY 2025-26) — Old vs New Regime | IndiaWise',
+  seoDescription: 'Compare Old vs New Tax Regime tax liability for FY 2024-25 in India. Accurate slabs, ₹75,000 standard deduction, Section 87A rebate, and cess calculations.',
+  formulaExplanation: {
+    title: 'Income Tax Computation & Slab Methodology',
+    formula: 'Total Tax = [Sum of (Slab Taxable Amount × Slab Rate) - Section 87A Rebate] + 4% Health & Education Cess',
+    explanation: 'In the New Tax Regime, taxable income is computed after a ₹75,000 standard deduction for salaried individuals. If taxable income is up to ₹7,00,000, Section 87A provides a full rebate resulting in zero tax. In the Old Regime, eligible deductions under Section 80C, 80D, and 24b reduce taxable income before progressive slabs and 4% cess are applied.'
+  },
+  benchmarks: {
+    title: 'New vs Old Regime Tax Comparison (FY 2024-25)',
+    subtitle: 'Illustrative annual tax liabilities for salaried employees under standard assumptions',
+    headers: ['Gross Income', 'New Regime Tax', 'Old Regime (No Deductions)', 'Old Regime (₹2.5L Deductions)'],
+    rows: [
+      ['₹7,50,000', '₹0', '₹54,600', '₹18,200'],
+      ['₹10,00,000', '₹44,200', '₹1,06,600', '₹54,600'],
+      ['₹15,00,000', '₹1,32,600', '₹2,62,600', '₹1,84,600'],
+      ['₹20,00,000', '₹2,62,600', '₹4,18,600', '₹3,40,600']
+    ]
+  },
+  relatedGuides: [
+    {
+      title: 'Understanding Income Tax Slabs & Deductions in India',
+      slug: 'understanding-income-tax',
+      description: 'Comprehensive guide covering New vs Old Regime, Section 87A, 80C, 80D, and HRA.'
+    },
+    {
+      title: 'CTC vs In-Hand Salary Explained',
+      slug: 'ctc-vs-in-hand-salary-explained',
+      description: 'Understand how salary structures and monthly TDS impact your take-home cash flow.'
+    }
+  ]
 };

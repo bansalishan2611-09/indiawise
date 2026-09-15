@@ -38,4 +38,34 @@ export const personalLoanDefinition: CalculatorDefinition = {
     { id: 'tenure', label: 'Loan Tenure', type: 'number', unitOptions: ['Years', 'Months'], min: 1, max: 84, step: 1, defaultValue: 3, helpText: 'Duration of the loan' },
   ],
   schemaType: 'FinancialProduct',
+  seoTitle: 'Personal Loan EMI Calculator India (2025) — Interest & Amortization | IndiaWise',
+  seoDescription: 'Calculate personal loan EMIs, total interest payout, and amortization schedule in India. Discover how prepayments reduce expensive interest charges.',
+  formulaExplanation: {
+    title: 'Personal Loan EMI Calculation Model',
+    formula: 'EMI = [P × R × (1 + R)^N] / [(1 + R)^N - 1]',
+    explanation: 'Because personal loans are unsecured, interest rates (10.5%–24% p.a.) are markedly higher than secured loans. Monthly interest is computed on reducing principal, meaning even small prepayments dramatically lower your overall interest burden.'
+  },
+  benchmarks: {
+    title: 'Representative Personal Loan EMIs (at 12.50% p.a.)',
+    subtitle: 'Monthly instalments and total interest across 1, 3, and 5-year tenures',
+    headers: ['Loan Amount', '1 Year Tenure', '3 Years Tenure', '5 Years Tenure'],
+    rows: [
+      ['₹1,00,000', '₹8,908 (Int: ₹6,900)', '₹3,346 (Int: ₹20,446)', '₹2,250 (Int: ₹34,988)'],
+      ['₹3,00,000', '₹26,725 (Int: ₹20,699)', '₹10,037 (Int: ₹61,338)', '₹6,749 (Int: ₹1,04,964)'],
+      ['₹5,00,000', '₹44,541 (Int: ₹34,498)', '₹16,727 (Int: ₹1,02,164)', '₹11,249 (Int: ₹1,74,940)'],
+      ['₹10,00,000', '₹89,082 (Int: ₹68,996)', '₹33,453 (Int: ₹2,04,328)', '₹22,498 (Int: ₹3,49,879)']
+    ]
+  },
+  relatedGuides: [
+    {
+      title: 'Debt-to-Income (DTI) Ratio Explained',
+      slug: 'debt-to-income-ratio-explained',
+      description: 'Evaluate how high-interest personal loans push your DTI ratio into the dangerous zone.'
+    },
+    {
+      title: 'EMI vs Income: The 40% Affordability Rule',
+      slug: 'emi-vs-income-loan-affordability',
+      description: 'Prevent debt overload by keeping aggregate monthly loan instalments within safe boundaries.'
+    }
+  ]
 };

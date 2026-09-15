@@ -36,4 +36,34 @@ export const bmiDefinition: CalculatorDefinition = {
     { id: 'weight', label: 'Weight', type: 'number', unitOptions: ['kg', 'lbs'], min: 20, max: 500, step: 0.5, defaultValue: 70, helpText: 'Your body weight' },
     { id: 'height', label: 'Height', type: 'number', unitOptions: ['cm', 'm', 'inches'], min: 50, max: 300, step: 0.5, defaultValue: 170, helpText: 'Your height' },
   ],
+  seoTitle: 'BMI Calculator — Body Mass Index & Healthy Weight Range | IndiaWise',
+  seoDescription: 'Calculate Body Mass Index (BMI) for men and women. Includes WHO categories, Asian/Indian population thresholds, and ideal healthy weight guidance.',
+  formulaExplanation: {
+    title: 'Body Mass Index (BMI) Formula',
+    formula: 'BMI = Weight (kg) / [Height (m)]²',
+    explanation: 'BMI is an established anthropometric screening tool defined by the World Health Organization (WHO). It scales body weight quadratically against height to categorize relative body fatness.'
+  },
+  benchmarks: {
+    title: 'Asian Indian BMI Cut-Offs vs Global WHO Standards',
+    subtitle: 'Due to higher abdominal adiposity, health guidelines recommend adjusted thresholds for South Asians',
+    headers: ['Category', 'Global WHO Standard', 'Asian Indian Guideline', 'Health Risk Profile'],
+    rows: [
+      ['Underweight', '< 18.5', '< 18.5', 'Nutritional deficiency and lower immunity'],
+      ['Normal Weight', '18.5 – 24.9', '18.5 – 22.9', 'Lowest risk of lifestyle complications'],
+      ['Overweight', '25.0 – 29.9', '23.0 – 24.9', 'Elevated risk of diabetes and blood pressure'],
+      ['Obese', '≥ 30.0', '≥ 25.0', 'High risk of cardiometabolic health disorders']
+    ]
+  },
+  relatedGuides: [
+    {
+      title: 'How to Improve Your Financial Health Score',
+      slug: 'how-to-improve-your-financial-health-score',
+      description: 'Physical health and financial health both require disciplined habits and regular checkups.'
+    },
+    {
+      title: 'How Much Emergency Fund Should You Have in India?',
+      slug: 'how-much-emergency-fund-should-you-have',
+      description: 'Ensure adequate liquidity and medical coverage to shield your family from health emergencies.'
+    }
+  ]
 };

@@ -9,9 +9,10 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const params = await searchParams;
   const q = params?.q || '';
   return generatePageMetadata({
-    title: q ? `"${q}" - Search Results` : 'Search Calculators',
-    description: `Search results for ${q} on IndiaWise.`,
+    title: q ? `"${q}" — Search Results | IndiaWise` : 'Search Calculators | IndiaWise',
+    description: `Search results for ${q || 'calculators'} on IndiaWise.`,
     path: `/search`,
+    noIndex: true,
   });
 }
 

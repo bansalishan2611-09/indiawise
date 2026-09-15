@@ -38,4 +38,34 @@ SIPs bring financial discipline and allow you to benefit from "Rupee Cost Averag
     { id: 'expectedReturn', label: 'Expected Annual Return', type: 'number', unit: '%', min: 1, max: 30, step: 0.5, defaultValue: 12, placeholder: 'Expected return %' },
     { id: 'duration', label: 'Investment Duration', type: 'number', unit: 'Yrs', min: 1, max: 40, step: 1, defaultValue: 10, placeholder: 'Duration in years' },
   ],
+  seoTitle: 'SIP Calculator India (2025) — Mutual Fund Returns & Wealth Growth | IndiaWise',
+  seoDescription: 'Calculate expected returns on mutual fund SIP investments in India. Simulate wealth accumulation over 5, 10, 15, and 20 years with compound growth.',
+  formulaExplanation: {
+    title: 'Systematic Investment Plan (SIP) Compounding Formula',
+    formula: 'M = P × [((1 + i)^n - 1) / i] × (1 + i)',
+    explanation: 'Where M is the expected maturity amount, P is your regular monthly instalment, i is the periodic monthly rate (Annual expected return ÷ 12 ÷ 100), and n is the total number of monthly payments. Over extended periods, rupee-cost averaging combined with exponential compounding produces non-linear wealth creation.'
+  },
+  benchmarks: {
+    title: 'SIP Wealth Growth Projections (at 12% Expected Annual Return)',
+    subtitle: 'Illustrative maturity values across standard monthly commitments and time horizons',
+    headers: ['Monthly SIP', '5 Years', '10 Years', '15 Years', '20 Years'],
+    rows: [
+      ['₹5,000', '₹4.12 Lakh', '₹11.62 Lakh', '₹25.23 Lakh', '₹49.96 Lakh'],
+      ['₹10,000', '₹8.25 Lakh', '₹23.23 Lakh', '₹50.46 Lakh', '₹99.91 Lakh'],
+      ['₹25,000', '₹20.62 Lakh', '₹58.08 Lakh', '₹1.26 Crore', '₹2.50 Crore'],
+      ['₹50,000', '₹41.24 Lakh', '₹1.16 Crore', '₹2.52 Crore', '₹5.00 Crore']
+    ]
+  },
+  relatedGuides: [
+    {
+      title: 'SIP vs FD: Which Investment is Right for You?',
+      slug: 'sip-vs-fd-investment-comparison',
+      description: 'Compare real inflation-adjusted wealth generation between equity mutual fund SIPs and guaranteed bank FDs.'
+    },
+    {
+      title: 'How to Improve Your Financial Health Score',
+      slug: 'how-to-improve-your-financial-health-score',
+      description: 'See how an active investment rate directly boosts your overall personal finance resilience.'
+    }
+  ]
 };

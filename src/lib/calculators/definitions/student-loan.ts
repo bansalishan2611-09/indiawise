@@ -33,4 +33,34 @@ export const studentLoanDefinition: CalculatorDefinition = {
     { id: 'interestRate', label: 'Interest Rate', type: 'number', unitOptions: ['% p.a.', '% p.m.'], min: 5, max: 18, step: 0.1, defaultValue: 9.5, helpText: 'Annual or monthly interest rate' },
     { id: 'tenure', label: 'Repayment Tenure', type: 'number', unitOptions: ['Years', 'Months'], min: 1, max: 180, step: 1, defaultValue: 7, helpText: 'How long to repay' },
   ],
+  seoTitle: 'Student Education Loan Calculator India (2025) — Moratorium & EMI | IndiaWise',
+  seoDescription: 'Calculate education loan EMIs, moratorium interest, and Section 80E tax deductions in India. Plan repayment for study in India and abroad.',
+  formulaExplanation: {
+    title: 'Education Loan Repayment & Moratorium Mechanics',
+    formula: 'EMI = [P × R × (1 + R)^N] / [(1 + R)^N - 1]',
+    explanation: 'Education loans feature a moratorium period (course duration + 6 to 12 months). Simple interest accrued during study is capitalized into principal before EMI amortization commences, unless serviced monthly during the degree program.'
+  },
+  benchmarks: {
+    title: 'Indicative Education Loan Repayment (at 9.50% p.a. for 7 Years)',
+    subtitle: 'Estimated monthly instalments across common Indian and overseas degree loan sizes',
+    headers: ['Loan Amount', 'Monthly EMI', 'Total Interest', 'Total Repayment'],
+    rows: [
+      ['₹10,00,000', '₹16,351', '₹3,73,484', '₹13,73,484'],
+      ['₹20,00,000', '₹32,702', '₹7,46,968', '₹27,46,968'],
+      ['₹40,00,000', '₹65,404', '₹14,93,936', '₹54,93,936'],
+      ['₹75,00,000', '₹1,22,633', '₹28,01,130', '₹1,03,01,130']
+    ]
+  },
+  relatedGuides: [
+    {
+      title: 'Debt-to-Income (DTI) Ratio Explained',
+      slug: 'debt-to-income-ratio-explained',
+      description: 'Ensure starting graduate salary comfortably covers monthly student loan debt.'
+    },
+    {
+      title: 'Understanding Income Tax Slabs & Deductions in India',
+      slug: 'understanding-income-tax',
+      description: 'Explore Section 80E interest deductions available under the Old Tax Regime.'
+    }
+  ]
 };

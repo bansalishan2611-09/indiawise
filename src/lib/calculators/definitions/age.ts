@@ -28,4 +28,34 @@ export const ageDefinition: CalculatorDefinition = {
     { id: 'birthMonth', label: 'Birth Month', type: 'number', min: 1, max: 12, step: 1, defaultValue: 1, helpText: '1 = January, 12 = December' },
     { id: 'birthDay', label: 'Birth Day', type: 'number', min: 1, max: 31, step: 1, defaultValue: 1, helpText: 'Day of the month' },
   ],
+  seoTitle: 'Age Calculator — Exact Age in Years, Months, Weeks & Days | IndiaWise',
+  seoDescription: 'Calculate exact age from date of birth in years, months, weeks, days, hours, and minutes. Includes leap year accounting and milestone tracking.',
+  formulaExplanation: {
+    title: 'Chronological Age Computation Methodology',
+    formula: 'Chronological Age = Current Date (Y-M-D) - Date of Birth (Y-M-D) with Leap Day Adjustment',
+    explanation: 'The calculation resolves calendar months dynamically (28/29, 30, or 31 days) and accounts for quadrennial Gregorian leap years, guaranteeing exact day-level precision.'
+  },
+  benchmarks: {
+    title: 'Standard Life Milestones in India',
+    subtitle: 'Statutory age thresholds and rights across personal, civil, and financial domains',
+    headers: ['Age Milestone', 'Classification', 'Statutory / Financial Rights'],
+    rows: [
+      ['18 Years', 'Legal Adulthood', 'Right to vote, driving license eligibility, independent bank accounts'],
+      ['21 Years', 'Civil Rights', 'Statutory eligibility thresholds under various civil acts'],
+      ['60 Years', 'Senior Citizen', 'Higher bank FD interest rates (+0.50%), elevated tax rebate thresholds'],
+      ['80 Years', 'Super Senior Citizen', 'Special healthcare priority and senior banking privileges']
+    ]
+  },
+  relatedGuides: [
+    {
+      title: 'How to Improve Your Financial Health Score',
+      slug: 'how-to-improve-your-financial-health-score',
+      description: 'Align your savings, investments, and debt elimination strategies with your age bracket.'
+    },
+    {
+      title: 'Understanding Income Tax Slabs & Deductions in India',
+      slug: 'understanding-income-tax',
+      description: 'Explore tax brackets and age-based deduction provisions.'
+    }
+  ]
 };

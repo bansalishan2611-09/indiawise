@@ -1,30 +1,37 @@
 import { generatePageMetadata } from "@/lib/seo/metadata";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 
-import { getCalculatorsByCategory } from "@/lib/calculators/registry";
+import { getCalculatorsByCategory, getAllCalculators } from "@/lib/calculators/registry";
 import CalculatorCard from "@/components/calculator/CalculatorCard";
 import { Search } from "lucide-react";
 import Link from "next/link";
+import { siteConfig } from "@/config/site";
+
+export async function generateStaticParams() {
+  const categories = Array.from(new Set(getAllCalculators().map(def => def.categorySlug)));
+  return categories.map(slug => ({ slug }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const slug = (await params).slug;
   const formattedSlug = slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   
   return generatePageMetadata({
-    title: `${formattedSlug} Calculators`,
-    description: `Browse all our free, accurate ${formattedSlug} calculators designed for India.`,
+    title: `${formattedSlug} Calculators India (Free Online Tools) | IndiaWise`,
+    description: `Browse all our free, 100% accurate ${formattedSlug} calculators designed for Indian tax slabs, bank rules, and salary structures.`,
     path: `/categories/${slug}`,
   });
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const formattedSlug = slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   
   const calculators = getCalculatorsByCategory(slug);
   
   const breadcrumbItems = [
     { label: "Categories", href: "/categories" },
-    { label: slug, href: `/categories/${slug}` },
+    { label: formattedSlug, href: `/categories/${slug}` },
   ];
 
   return (

@@ -53,12 +53,30 @@ export interface CalculatorDefinition {
   categorySlug: string;
   shortDescription: string;
   longDescription: string;
+  seoTitle?: string;
+  seoDescription?: string;
   inputs: CalculatorInput[];
   keywords: string[];
   relatedCalculators?: string[];
   faqs?: CalculatorFAQ[];
   schemaType?: string;
   whatIf?: WhatIfConfig; // The configuration for the What-If slider
+  formulaExplanation?: {
+    title: string;
+    formula: string;
+    explanation: string;
+  };
+  benchmarks?: {
+    title: string;
+    subtitle?: string;
+    headers: string[];
+    rows: (string | number)[][];
+  };
+  relatedGuides?: {
+    title: string;
+    slug: string;
+    description: string;
+  }[];
 }
 
 export interface AmortizationRow {

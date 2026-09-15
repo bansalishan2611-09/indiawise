@@ -36,4 +36,34 @@ export const salaryDefinition: CalculatorDefinition = {
     { id: 'ctc', label: 'Cost to Company (CTC)', type: 'number', unit: '₹', min: 200000, max: 50000000, step: 50000, defaultValue: 1200000, helpText: 'Your total annual package' },
     { id: 'basicPercentage', label: 'Basic Salary (% of CTC)', type: 'number', unit: '%', min: 30, max: 60, step: 1, defaultValue: 50, helpText: 'Usually 40% to 50% of CTC' },
   ],
+  seoTitle: 'In-Hand Salary Calculator India (2025) — CTC to Take-Home Breakdown | IndiaWise',
+  seoDescription: 'Calculate actual monthly in-hand take-home salary from annual CTC in India. Detailed itemized breakdown of EPF, Gratuity, Standard Deduction, and TDS.',
+  formulaExplanation: {
+    title: 'CTC to In-Hand Salary Equation',
+    formula: 'Monthly In-Hand = [Gross Monthly Salary - Employee EPF (12% Basic) - Income Tax (TDS) - Professional Tax]',
+    explanation: 'Cost to Company (CTC) comprises both your direct pay and employer-side provisions. Gross Salary equals CTC minus Employer PF (12% of Basic) and Gratuity (approx 4.81% of Basic). Your net take-home bank credit reflects gross salary less employee PF and monthly income tax TDS.'
+  },
+  benchmarks: {
+    title: 'Indicative CTC vs Monthly In-Hand Salary (New Tax Regime)',
+    subtitle: 'Estimated monthly bank credit assuming 50% Basic Salary structure with standard EPF and tax deductions',
+    headers: ['Annual CTC', 'Gross Annual', 'Monthly In-Hand', 'Total Monthly Deductions'],
+    rows: [
+      ['₹6,00,000', '₹5,31,000', '₹41,250', '₹8,750 / mo'],
+      ['₹12,00,000', '₹10,62,000', '₹76,450', '₹23,550 / mo'],
+      ['₹18,00,000', '₹15,93,000', '₹1,09,100', '₹40,900 / mo'],
+      ['₹25,00,000', '₹22,12,500', '₹1,44,700', '₹63,600 / mo']
+    ]
+  },
+  relatedGuides: [
+    {
+      title: 'CTC vs In-Hand Salary Explained',
+      slug: 'ctc-vs-in-hand-salary-explained',
+      description: 'Breakdown of basic salary, HRA, special allowance, EPF, and gratuity provisions.'
+    },
+    {
+      title: 'Understanding Income Tax Slabs & Deductions in India',
+      slug: 'understanding-income-tax',
+      description: 'Evaluate New vs Old Regime slabs to minimize TDS deductions on your pay slips.'
+    }
+  ]
 };

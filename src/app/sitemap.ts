@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { getAllCalculators } from '@/lib/calculators/registry';
+import { getAllGuides } from '@/lib/guides/content';
 import { siteConfig } from '@/config/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -46,13 +47,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // Educational Guide pages
-  const guides = [
-    'personal-finance-101',
-    'understanding-income-tax',
-  ];
-  const guideRoutes = guides.map((slug) => ({
-    url: `${siteUrl}/guides/${slug}`,
-    lastModified: new Date().toISOString().split('T')[0],
+  const guideRoutes = getAllGuides().map((guide) => ({
+    url: `${siteUrl}/guides/${guide.slug}`,
+    lastModified: guide.publishedAt,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));

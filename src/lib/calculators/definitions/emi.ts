@@ -44,4 +44,34 @@ Note: While this calculator gives highly accurate estimates, your final bank EMI
     { id: 'otherEMIs', label: 'Other Monthly EMIs', type: 'number', unit: '₹', min: 0, max: 5000000, step: 5000, defaultValue: 0, isAdvanced: true, helpText: 'Any existing car, personal, or other loan EMIs' }
   ],
   schemaType: 'FinancialProduct',
+  seoTitle: 'Home Loan EMI Calculator India (2025) — Monthly EMI, Interest & Amortization | IndiaWise',
+  seoDescription: 'Calculate accurate monthly home loan EMIs, interest payable, and amortization schedule in India. Compare tenures and discover how extra payments save lakhs.',
+  formulaExplanation: {
+    title: 'Home Loan EMI Formula & Mathematical Breakdown',
+    formula: 'EMI = [P × R × (1 + R)^N] / [(1 + R)^N - 1]',
+    explanation: 'Where P is the principal loan amount, R is the monthly interest rate (Annual interest rate ÷ 12 ÷ 100), and N is the total loan tenure in months. In the early phase of your loan tenure, the interest component forms the lion’s share of your monthly EMI, gradually tapering off as principal amortization accelerates in later years.'
+  },
+  benchmarks: {
+    title: 'Standard Home Loan EMI Benchmarks (at 8.50% p.a. for 20 Years)',
+    subtitle: 'Representative monthly instalments and total interest payable across popular loan brackets in India',
+    headers: ['Loan Amount', 'Monthly EMI', 'Total Interest', 'Total Outflow'],
+    rows: [
+      ['₹30,00,000', '₹26,035', '₹32,48,337', '₹62,48,337'],
+      ['₹50,00,000', '₹43,391', '₹54,13,879', '₹1,04,13,879'],
+      ['₹75,00,000', '₹65,087', '₹81,20,818', '₹1,56,20,818'],
+      ['₹1,00,00,000', '₹86,782', '₹1,08,27,758', '₹2,08,27,758']
+    ]
+  },
+  relatedGuides: [
+    {
+      title: 'How Home Loan EMI is Calculated in India',
+      slug: 'how-home-loan-emi-is-calculated',
+      description: 'Understand the mathematics of reducing balance interest, monthly amortization, and prepayment strategies.'
+    },
+    {
+      title: 'EMI vs Income: The 40% Affordability Rule',
+      slug: 'emi-vs-income-loan-affordability',
+      description: 'Discover how Indian lenders evaluate your FOIR and debt-to-income ratio before approving loans.'
+    }
+  ]
 };
