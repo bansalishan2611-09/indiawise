@@ -337,17 +337,6 @@ export default function FinancialHealthExperience() {
     return url.toString();
   }, [sharePrivacy, healthResult.score, healthResult.category, inputs, showCustomExpenses, shareName]);
 
-  // Real-time synchronization of browser address bar for Financial Health Score
-  useEffect(() => {
-    if (isSharedView) return;
-    const timer = setTimeout(() => {
-      if (typeof window !== 'undefined' && window.history?.replaceState && shareUrl) {
-        window.history.replaceState(null, '', shareUrl);
-      }
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [shareUrl, isSharedView]);
-
   const handleCopyLink = async () => {
     try {
       const urlToCopy = isSharedView && typeof window !== "undefined" ? window.location.href : shareUrl;

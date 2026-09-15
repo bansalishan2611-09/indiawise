@@ -272,18 +272,6 @@ export default function CalculatorShell({ definition, slug }: Props) {
     return qs ? `${baseUrl}${cleanPath}?${qs}` : `${baseUrl}${cleanPath}`;
   }, [definition, values, effectiveShareName, shareMode]);
 
-  // Real-time synchronization of browser address bar with current calculation parameters & share name
-  useEffect(() => {
-    if (!isMounted) return;
-    const timer = setTimeout(() => {
-      if (typeof window !== 'undefined' && window.history?.replaceState) {
-        const url = buildShareUrl();
-        window.history.replaceState(null, '', url);
-      }
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [values, effectiveShareName, shareMode, isMounted, buildShareUrl]);
-
   const handleWhatsAppShare = useCallback(() => {
     const shareUrl = buildShareUrl();
     if (typeof window !== 'undefined' && window.history?.replaceState) {
