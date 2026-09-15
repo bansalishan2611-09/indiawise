@@ -552,10 +552,27 @@ export function MiniAIChatbot() {
             )}
             
             {error && (
-              <div className={`flex justify-center my-2 ${viewMode !== 'default' ? 'max-w-3xl mx-auto w-full' : ''}`}>
-                <div className="bg-red-50 border border-red-100 text-red-600 text-xs px-3 py-2 rounded-lg text-center">
+              <div className={`flex flex-col items-center justify-center my-3 gap-2 ${viewMode !== 'default' ? 'max-w-3xl mx-auto w-full' : ''}`}>
+                <div className="bg-amber-50 border border-amber-200 text-amber-900 text-xs px-4 py-2.5 rounded-xl text-center shadow-xs">
                   {error}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+                    if (lastUserMsg && lastUserMsg.parts[0]?.text) {
+                      setInput(lastUserMsg.parts[0].text);
+                      setError(null);
+                      setTimeout(() => {
+                        const el = document.getElementById('chat-form-btn');
+                        if (el) el.click();
+                      }, 50);
+                    }
+                  }}
+                  className="text-xs font-semibold text-brand hover:underline cursor-pointer bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1 rounded-lg transition-colors"
+                >
+                  🔄 Retry Question
+                </button>
               </div>
             )}
             <div ref={messagesEndRef} />

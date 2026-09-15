@@ -219,20 +219,60 @@ SUGGESTED_QUESTIONS: ["Question 1", "Question 2"]`;
 
     const ai = new GoogleGenAI({ apiKey });
 
+    // Multi-model resilience: Primary is Google's recommended gemini-3.6-flash, with automatic fallbacks on 503/429
+    const CANDIDATE_MODELS = [
+      'gemini-3.6-flash',
+      'gemini-3.5-flash-lite',
+      'gemini-3.1-flash-lite',
+    ];
+
+    const generateWithFallback = async (contents: unknown[], config: unknown) => {
+      let lastError: unknown = null;
+      for (const model of CANDIDATE_MODELS) {
+        for (let attempt = 0; attempt < 2; attempt++) {
+          try {
+            const res = await ai.models.generateContent({
+              model,
+              contents: contents as Parameters<typeof ai.models.generateContent>[0]['contents'],
+              config: config as Parameters<typeof ai.models.generateContent>[0]['config'],
+            });
+            return res;
+          } catch (err: unknown) {
+            lastError = err;
+            const errString = err instanceof Error ? err.message : String(err);
+            const isTransient =
+              errString.includes('503') ||
+              errString.includes('UNAVAILABLE') ||
+              errString.includes('high demand') ||
+              errString.includes('429') ||
+              errString.includes('RESOURCE_EXHAUSTED');
+
+            console.warn(`[IndiaWise AI] Model ${model} (attempt ${attempt + 1}) encountered transient error:`, errString);
+
+            if (isTransient && attempt === 0) {
+              await new Promise((resolve) => setTimeout(resolve, 600));
+              continue;
+            }
+            break;
+          }
+        }
+      }
+      throw lastError;
+    };
+
     let response;
     try {
-      response = await ai.models.generateContent({
-        model: 'gemini-3.1-flash-lite',
-        contents: recentMessages,
-        config: {
-          systemInstruction,
-          tools: [{ functionDeclarations: aiTools as unknown as Parameters<typeof ai.models.generateContent>[0]['config'] extends { tools?: Array<{ functionDeclarations?: infer T }> } ? T : never }],
-          temperature: 0.1, // Keep it deterministic
-        },
+      response = await generateWithFallback(recentMessages, {
+        systemInstruction,
+        tools: [{ functionDeclarations: aiTools as unknown as Parameters<typeof ai.models.generateContent>[0]['config'] extends { tools?: Array<{ functionDeclarations?: infer T }> } ? T : never }],
+        temperature: 0.1, // Keep it deterministic
       });
     } catch (e: unknown) {
-      console.error('Gemini API Error:', e);
-      return NextResponse.json({ error: 'Failed to generate response.' }, { status: 502 });
+      console.error('Gemini API Error after fallback attempts:', e);
+      return NextResponse.json(
+        { error: 'IndiaWise AI is currently experiencing high demand from the AI provider. Please try again in a few moments.' },
+        { status: 503 }
+      );
     }
 
     let calculatorAction: CalculatorAction | null = null;
@@ -270,20 +310,19 @@ SUGGESTED_QUESTIONS: ["Question 1", "Question 2"]`;
         }
       ];
 
-      // Request the final answer from Gemini using the tool result
+      // Request the final answer from Gemini using the tool result with fallback
       try {
-        response = await ai.models.generateContent({
-          model: 'gemini-3.1-flash-lite',
-          contents: toolMessages,
-          config: {
-            systemInstruction,
-            tools: [{ functionDeclarations: aiTools as unknown as Parameters<typeof ai.models.generateContent>[0]['config'] extends { tools?: Array<{ functionDeclarations?: infer T }> } ? T : never }],
-            temperature: 0.1,
-          },
+        response = await generateWithFallback(toolMessages, {
+          systemInstruction,
+          tools: [{ functionDeclarations: aiTools as unknown as Parameters<typeof ai.models.generateContent>[0]['config'] extends { tools?: Array<{ functionDeclarations?: infer T }> } ? T : never }],
+          temperature: 0.1,
         });
       } catch (e: unknown) {
-        console.error('Gemini Tool-Resolution Error:', e);
-        return NextResponse.json({ error: 'Failed to explain calculation result.' }, { status: 502 });
+        console.error('Gemini Tool-Resolution Error after fallback attempts:', e);
+        return NextResponse.json(
+          { error: 'Failed to explain calculation result due to provider capacity. Please try again.' },
+          { status: 503 }
+        );
       }
     }
 
