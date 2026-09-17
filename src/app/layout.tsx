@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "UBOQH9JIs8VlJziTn14mqIpAPuZkTBln6uO_IBb1BZ4",
+    other: {
+      "p:domain_verify": "ddbf5e45ca152e366891f96d4c29c96b",
+    },
   },
   icons: {
     icon: [
@@ -51,6 +54,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} h-full antialiased`}>
       <head>
+        {/* Pinterest Domain Verification */}
+        <meta name="p:domain_verify" content="ddbf5e45ca152e366891f96d4c29c96b" />
+        <meta name="pinterest-site-verification" content="ddbf5e45ca152e366891f96d4c29c96b" />
         {/* Explicitly tell Google our Site Name and Founder to fix AI Overview confusion */}
         <script
           id="schema-organization"
