@@ -64,5 +64,19 @@ export function sanitizeAIResponseUrls(text: string): string {
     sanitized = sanitized.split(apiKey).join('[REDACTED]');
   }
 
+  // Repair broken markdown links split across newlines: [Title]\n(url) -> [Title](url)
+  sanitized = sanitized.replace(/\[([^\]\n]+)\]\s*\n\s*\((https?:\/\/[^\)\s]+)\)/g, '[$1]($2)');
+
+  // Repair markdown links with spaces between brackets and parentheses: [Title] (url) -> [Title](url)
+  sanitized = sanitized.replace(/\[([^\]\n]+)\]\s+\((https?:\/\/[^\)\s]+)\)/g, '[$1]($2)');
+
+  // Repair bold tags wrapped inside or outside markdown links
+  sanitized = sanitized.replace(/\*\*\[(.*?)\]\((.*?)\)\*\*/g, '[$1]($2)');
+  sanitized = sanitized.replace(/\[\*\*(.*?)\*\*\]\((.*?)\)/g, '[$1]($2)');
+  sanitized = sanitized.replace(/\*\*\[(.*?)\]\*\*\s*\((.*?)\)/g, '[$1]($2)');
+
+  // Correct known hallucinated slug aliases
+  sanitized = sanitized.replace(/\/calculators\/tax\/tax-calculator\b/g, '/calculators/tax/income-tax-calculator');
+
   return sanitized;
 }

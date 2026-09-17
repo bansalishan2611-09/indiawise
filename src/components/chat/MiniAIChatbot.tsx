@@ -206,7 +206,16 @@ export function MiniAIChatbot() {
   };
 
   const renderText = (text: string) => {
-    return text.split('\n').map((line, i) => {
+    // Pre-process entire text to repair split/broken markdown links, whitespace, and slug aliases
+    let normalized = text
+      .replace(/\[([^\]\n]+)\]\s*\n\s*\((https?:\/\/[^\)\s]+)\)/g, '[$1]($2)')
+      .replace(/\[([^\]\n]+)\]\s+\((https?:\/\/[^\)\s]+)\)/g, '[$1]($2)')
+      .replace(/\*\*\[(.*?)\]\((.*?)\)\*\*/g, '[$1]($2)')
+      .replace(/\[\*\*(.*?)\*\*\]\((.*?)\)/g, '[$1]($2)')
+      .replace(/\*\*\[(.*?)\]\*\*\s*\((.*?)\)/g, '[$1]($2)')
+      .replace(/\/calculators\/tax\/tax-calculator\b/g, '/calculators/tax/income-tax-calculator');
+
+    return normalized.split('\n').map((line, i) => {
       if (!line.trim()) return <br key={i} />;
       
       let isList = false;
@@ -220,7 +229,7 @@ export function MiniAIChatbot() {
       content = content.replace(/\*\*\[(.*?)\]\((.*?)\)\*\*/g, '[$1]($2)');
 
       const tokens: React.ReactNode[] = [];
-      const regex = /(\[.*?\]\(.*?\))|(\*\*.*?\*\*)|(https?:\/\/[^\s),]+)|([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+      const regex = /(\[.+?\]\s*\(.+?\))|(\*\*.*?\*\*)|(https?:\/\/[^\s),]+)|([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
       let lastIdx = 0;
       let match;
       
@@ -230,9 +239,10 @@ export function MiniAIChatbot() {
         }
         
         if (match[1]) {
-          const linkMatch = /\[(.*?)\]\((.*?)\)/.exec(match[1]);
+          const linkMatch = /\[(.*?)\]\s*\((.*?)\)/.exec(match[1]);
           if (linkMatch) {
-            const rawUrl = linkMatch[2];
+            const linkText = linkMatch[1].replace(/^\*\*|\*\*$/g, '');
+            const rawUrl = linkMatch[2].trim();
             const isMailto = rawUrl.startsWith('mailto:');
             // Check if URL is an internal IndiaWise path or production site URL
             const isInternal = !isMailto && (
@@ -258,20 +268,20 @@ export function MiniAIChatbot() {
 
             if (isInternal) {
               tokens.push(
-                <Link key={match.index} href={cleanInternalPath} className="text-brand underline hover:text-navy font-semibold">
-                  {linkMatch[1]}
+                <Link key={match.index} href={cleanInternalPath} className="text-brand underline hover:text-navy font-semibold break-words">
+                  {linkText}
                 </Link>
               );
             } else if (isMailto) {
               tokens.push(
-                <a key={match.index} href={rawUrl} className="text-brand underline hover:text-navy font-semibold">
-                  {linkMatch[1]}
+                <a key={match.index} href={rawUrl} className="text-brand underline hover:text-navy font-semibold break-words">
+                  {linkText}
                 </a>
               );
             } else {
               tokens.push(
-                <a key={match.index} href={rawUrl} target="_blank" rel="noopener noreferrer" className="text-brand underline hover:text-navy font-semibold">
-                  {linkMatch[1]}
+                <a key={match.index} href={rawUrl} target="_blank" rel="noopener noreferrer" className="text-brand underline hover:text-navy font-semibold break-words">
+                  {linkText}
                 </a>
               );
             }
@@ -477,7 +487,7 @@ export function MiniAIChatbot() {
                         </div>
                       )}
                       
-                      <div className={`max-w-[80%] rounded-2xl leading-relaxed shadow-sm ${
+                      <div className={`max-w-[80%] rounded-2xl leading-relaxed shadow-sm break-words [overflow-wrap:anywhere] ${
                         viewMode === 'default' ? 'px-4 py-3 text-[14.5px]' : 'px-5 py-4 text-[15.5px]'
                       } ${
                         isUser 

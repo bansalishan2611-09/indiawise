@@ -124,6 +124,8 @@ ${calculatorsList}
 
 LINK GENERATION RULES:
 - ALWAYS format links as Markdown links [Anchor Text](URL) using the exact production URLs provided above (base: ${prodBaseUrl}).
+- CRITICAL: Never split a markdown link across lines or put whitespace between [Anchor Text] and (URL). Write [Anchor Text](URL) as a single continuous unit on the same line.
+- CRITICAL: ALWAYS use the exact canonical slugs provided in the calculator list above. For example, ALWAYS use [Income Tax Calculator](${getSafeProductionUrl('/calculators/tax/income-tax-calculator')}), NEVER invent or guess slugs like /tax-calculator.
 - NEVER output raw plain text URLs without markdown brackets (use [IndiaWise](${prodBaseUrl}) instead of just the URL).
 - NEVER output localhost, 127.0.0.1, internal development URLs, or API routes.
 - Ensure Markdown links are formatted cleanly without double URL encoding.
