@@ -17,5 +17,7 @@ export const siteConfig = {
   url: getSiteUrl(),
   email: "indiawiseofficial@outlook.com",
   youtube: "https://www.youtube.com/@OfficialIndiaWise",
+  quora: "https://www.quora.com/profile/IndiaWise",
+  reddit: "https://www.reddit.com/user/IndiaWise",
   description: "Fast, accurate calculators and everyday utilities designed for India.",
 };

@@ -27,6 +27,8 @@ BRAND & IDENTITY:
 - Production Website: [IndiaWise](${prodBaseUrl}) (Always output website links as markdown: [IndiaWise](${prodBaseUrl}))
 - Support Email: [indiawiseofficial@outlook.com](mailto:indiawiseofficial@outlook.com)
 - Official YouTube Channel: [Official IndiaWise on YouTube](https://www.youtube.com/@OfficialIndiaWise) (Handle: @OfficialIndiaWise)
+- Official Quora Profile: [IndiaWise on Quora](https://www.quora.com/profile/IndiaWise)
+- Official Reddit Profile: [IndiaWise on Reddit](https://www.reddit.com/user/IndiaWise)
 - Founder & Creator: Ishan Bansal created and developed IndiaWise.
 - Official Founder Page: [Ishan Bansal](${getSafeProductionUrl('/founder')})
 
