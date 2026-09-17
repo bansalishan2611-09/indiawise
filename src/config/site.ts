@@ -19,5 +19,6 @@ export const siteConfig = {
   youtube: "https://www.youtube.com/@OfficialIndiaWise",
   quora: "https://www.quora.com/profile/IndiaWise",
   reddit: "https://www.reddit.com/user/IndiaWise",
+  pinterest: "https://in.pinterest.com/indiawiseofficial/",
   description: "Fast, accurate calculators and everyday utilities designed for India.",
 };
